@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLoginMutation } from './authApi';
-import { useAppDispatch } from '../../app/store';
+import { useAppDispatch, useAppSelector } from '../../app/store';
 import { setCredentials } from './authSlice';
 import styles from './LoginForm.module.css';
 import { Button, TextField, Typography, Box, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  // Prefilled permanent credentials for testing
+  const navigate = useNavigate();
   const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('Admin123!');
   const [error, setError] = useState<string | null>(null);
+  const token = useAppSelector(state => state.auth.token);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +27,12 @@ const LoginForm: React.FC = () => {
     try {
       const result = await login({ email, password }).unwrap();
       console.log(result);
-      dispatch(setCredentials({ token: result.token, user: result.user }));
+      if (result?.success) {
+        const user = result.data?.user || null;
+        dispatch(setCredentials({ token: 'session', user }));
+      } else {
+        setError(result?.message || 'Login failed');
+      }
     } catch (err: any) {
       setError(err?.data?.message || 'Login failed');
     }
