@@ -1,8 +1,13 @@
 import React from 'react';
-import LoginForm from './features/auth/LoginForm';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes';
 
 function App() {
-  return <LoginForm />;
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
 }
 
 export default App;
