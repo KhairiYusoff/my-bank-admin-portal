@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useLogoutMutation } from './authApi';
-import { useAppDispatch } from '../../app/store';
-import { logout as logoutAction } from './authSlice';
+import { useAppDispatch } from '@/app/store';
+import { logout as logoutAction } from '@/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const LogoutButton: React.FC = () => {

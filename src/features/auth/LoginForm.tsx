@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLoginMutation } from './authApi';
-import { useAppDispatch, useAppSelector } from '../../app/store';
-import { setCredentials } from './authSlice';
+import { useAppDispatch, useAppSelector } from '@/app/store';
+import { setCredentials } from '@/features/auth/authSlice';
 import styles from './LoginForm.module.css';
 import { Button, TextField, Typography, Box, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';

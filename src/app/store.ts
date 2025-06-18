@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { api } from '../features/api/apiSlice';
-import authReducer from '../features/auth/authSlice';
+import { api } from '@/features/api/apiSlice';
+import authReducer from '@/features/auth/authSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';

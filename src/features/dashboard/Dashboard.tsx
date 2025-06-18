@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { useAppSelector } from '../../app/store';
-import LogoutButton from '../auth/LogoutButton';
+import { useAppSelector } from '@/app/store';
+import LogoutButton from '@/features/auth/LogoutButton';
 
 const Dashboard: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
