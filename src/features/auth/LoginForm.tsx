@@ -8,8 +8,9 @@ import { Button, TextField, Typography, Box, Alert } from '@mui/material';
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // Prefilled permanent credentials for testing
+  const [email, setEmail] = useState('admin@example.com');
+  const [password, setPassword] = useState('Admin123!');
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
