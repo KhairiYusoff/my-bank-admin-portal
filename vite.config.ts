@@ -6,6 +6,10 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 export default defineConfig({
+  server: {
+    port: 5180,
+    host: '127.0.0.1',
+  },
   plugins: [react()],
   resolve: {
     alias: {
