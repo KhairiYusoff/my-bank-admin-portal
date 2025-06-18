@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useAppSelector } from '../../app/store';
+import LogoutButton from '../auth/LogoutButton';
 
 const Dashboard: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
@@ -10,6 +11,7 @@ const Dashboard: React.FC = () => {
         Welcome, {user?.name || 'Admin'}!
       </Typography>
       <Typography variant="subtitle1">Role: {user?.role}</Typography>
+      <LogoutButton />
       {/* More dashboard content coming soon */}
     </Box>
   );
