@@ -11,17 +11,24 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.1.1",
     "@mui/icons-material": "^7.1.1",
+    "@mui/lab": "^7.0.0-beta.13",
     "@mui/material": "^7.1.1",
     "@reduxjs/toolkit": "^2.8.2",
+    "@types/date-fns": "^2.6.3",
     "@types/redux-persist": "^4.3.1",
+    "date-fns": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.58.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@types/node": "^24.0.3",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "@types/react-redux": "^7.1.34",

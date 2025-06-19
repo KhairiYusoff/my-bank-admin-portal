@@ -12,10 +12,8 @@ const navItems: { label: string; path: string }[] = [
   { label: 'Pending Applications', path: '/pending-applications' },
   { label: 'Transactions', path: '/transactions' },
   { label: 'Accounts', path: '/accounts' },
-  { label: 'Activity', path: '/activity' },
   { label: 'Airdrop', path: '/airdrop' },
   { label: 'My Profile', path: '/profile' },
-  { label: 'Update Profile', path: '/update-profile' },
 ];
 
 const AdminLayout: React.FC = () => {

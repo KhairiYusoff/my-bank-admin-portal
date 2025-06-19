@@ -1,51 +1,77 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoginForm from '@/features/auth/LoginForm';
 import Dashboard from '@/features/dashboard/Dashboard';
 import UsersList from '@/features/users/UsersList';
 import CreateStaff from '@/features/admin/CreateStaff';
 import PendingApplications from '@/features/admin/PendingApplications';
 import AdminLayout from 'components/AdminLayout';
-import Transactions from '@/features/admin/Transactions';
-import Accounts from '@/features/admin/Accounts';
-import ActivityPage from '@/features/common/ActivityPage';
+import TransactionsList from '@/features/transactions/TransactionsList';
+import AccountsList from '@/features/accounts/AccountsList';
 import Airdrop from '@/features/admin/Airdrop';
 import Profile from '@/features/common/Profile';
-import UpdateProfile from '@/features/common/UpdateProfile';
-import { useAppSelector } from '@/app/store';
+import ProtectedRoute from '@/features/auth/ProtectedRoute';
+import { useAppDispatch } from '@/app/hooks';
+import { updateActivity } from '@/features/auth/authSlice';
 
-const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = useAppSelector((state) => state.auth.token);
-  return token ? <>{children}</> : <Navigate to="/login" replace />;
+// Component to track user activity
+const ActivityTracker = () => {
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const handleActivity = () => {
+      dispatch(updateActivity());
+    };
+
+    // Track mouse movements, clicks, and key presses
+    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'click'];
+    events.forEach(event => {
+      window.addEventListener(event, handleActivity);
+    });
+
+    // Update activity on route change
+    handleActivity();
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
+  }, [dispatch, location]);
+
+  return null;
 };
 
 const AppRoutes = () => (
-  <Routes>
-    <Route path="/login" element={<LoginForm />} />
+  <>
+    <ActivityTracker />
+    <Routes>
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/unauthorized" element={<div>Unauthorized access</div>} />
 
-    <Route
-      path="/"
-      element={
-        <PrivateRoute>
-          <AdminLayout />
-        </PrivateRoute>
-      }
-    >
-      <Route index element={<Dashboard />} />
-      <Route path="users" element={<UsersList />} />
-      <Route path="create-staff" element={<CreateStaff />} />
-      <Route path="pending-applications" element={<PendingApplications />} />
-      <Route path="transactions" element={<Transactions />} />
-      <Route path="accounts" element={<Accounts />} />
-      <Route path="activity" element={<ActivityPage />} />
-      <Route path="airdrop" element={<Airdrop />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="update-profile" element={<UpdateProfile />} />
-    </Route>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Dashboard />} />
+        <Route path="users" element={<UsersList />} />
+        <Route path="create-staff" element={<CreateStaff />} />
+        <Route path="pending-applications" element={<PendingApplications />} />
+        <Route path="transactions" element={<TransactionsList />} />
+        <Route path="accounts" element={<AccountsList />} />
+        <Route path="airdrop" element={<Airdrop />} />
+        <Route path="profile" element={<Profile />} />
+      </Route>
 
-    {/* Fallback */}
-    <Route path="*" element={<Navigate to="/" replace />} />
-  </Routes>
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </>
 );
 
 export default AppRoutes;
