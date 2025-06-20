@@ -15,6 +15,7 @@ import {
   TableSortLabel,
   Snackbar,
 } from '@mui/material';
+import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 import { 
   useGetPendingApplicationsQuery,
   PendingApplication,
@@ -110,9 +111,9 @@ const PendingApplications: React.FC = () => {
           Failed to load pending applications. Please try again later.
         </Alert>
       ) : (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer>
-            <Table>
+        <Paper sx={paperWrapperStyles}>
+          <TableContainer sx={tableContainerStyles}>
+            <Table sx={tableStyles}>
               <TableHead>
                 <TableRow>
                   <TableCell>
@@ -175,7 +176,7 @@ const PendingApplications: React.FC = () => {
           
           {data?.meta && data.meta.total > 0 && (
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[10, 20, 50]} 
               component="div"
               count={data.meta.total}
               rowsPerPage={rowsPerPage}

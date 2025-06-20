@@ -15,10 +15,11 @@ import {
   Chip,
   TablePagination
 } from '@mui/material';
+import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 
 const UsersList: React.FC = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { data, error, isLoading } = useGetAllCustomersQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
@@ -52,7 +53,7 @@ const UsersList: React.FC = () => {
   };
 
   return (
-    <Box p={2}>
+    <Box sx={{ width: '100%', p: 2 }}>
       <Typography variant="h5" gutterBottom>
         All Users
       </Typography>
@@ -70,16 +71,17 @@ const UsersList: React.FC = () => {
       )}
       
       {data && data.success && data.data && data.data.length > 0 ? (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table>
+        <Paper sx={paperWrapperStyles}>
+        <TableContainer sx={tableContainerStyles}>
+          <Table sx={tableStyles}>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Verified</TableCell>
-                <TableCell>Created At</TableCell>
+                <TableCell width="20%">Name</TableCell>
+                <TableCell width="25%">Email</TableCell>
+                <TableCell width="15%">Role</TableCell>
+                <TableCell width="15%">Status</TableCell>
+                <TableCell width="10%">Verified</TableCell>
+                <TableCell width="15%">Created At</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -106,8 +108,9 @@ const UsersList: React.FC = () => {
               ))}
             </TableBody>
           </Table>
+        </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[10, 20, 50]}
+            rowsPerPageOptions={[10, 20, 50]} 
             component="div"
             count={data.meta.total}
             rowsPerPage={data.meta.limit}
@@ -115,11 +118,13 @@ const UsersList: React.FC = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelRowsPerPage="Rows per page:"
-            labelDisplayedRows={({ from, to, count }) => 
-              `${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`
-            }
+            labelDisplayedRows={({ from, to, count }) => (
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}>
+                {`${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`}
+              </Box>
+            )}
           />
-        </TableContainer>
+        </Paper>
       ) : (
         !isLoading && !error && (
           <Alert severity="info" sx={{ mt: 2 }}>

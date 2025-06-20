@@ -17,12 +17,13 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material';
+import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 import { formatCurrency, formatDateTime } from '@/utils/formatters';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const TransactionsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10); 
   const { data, error, isLoading } = useGetAllTransactionsQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
@@ -91,9 +92,9 @@ const TransactionsList: React.FC = () => {
         Transactions
       </Typography>
       
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table>
+      <Paper sx={paperWrapperStyles}>
+        <TableContainer sx={tableContainerStyles}>
+          <Table sx={tableStyles}>
             <TableHead>
               <TableRow>
                 <TableCell>Reference</TableCell>
@@ -162,7 +163,7 @@ const TransactionsList: React.FC = () => {
         
         {data && (
           <TablePagination
-            rowsPerPageOptions={[10, 20, 50]}
+            rowsPerPageOptions={[10, 20, 50]} 
             component="div"
             count={data.meta.total}
             rowsPerPage={rowsPerPage}

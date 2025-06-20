@@ -18,13 +18,14 @@ import {
   Tooltip,
   Avatar
 } from '@mui/material';
+import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const AccountsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10); 
   const { data, error, isLoading } = useGetAllAccountsQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
@@ -92,9 +93,9 @@ const AccountsList: React.FC = () => {
         Accounts
       </Typography>
       
-      <Paper sx={{ width: '100%', mb: 2, overflow: 'hidden' }}>
-        <TableContainer>
-          <Table>
+      <Paper sx={paperWrapperStyles}>
+        <TableContainer sx={tableContainerStyles}>
+          <Table sx={tableStyles}>
             <TableHead>
               <TableRow>
                 <TableCell>Account</TableCell>
@@ -169,7 +170,7 @@ const AccountsList: React.FC = () => {
         
         {data && (
           <TablePagination
-            rowsPerPageOptions={[10, 20, 50]}
+            rowsPerPageOptions={[10, 20, 50]} 
             component="div"
             count={data?.meta?.total || 0}
             rowsPerPage={rowsPerPage}
