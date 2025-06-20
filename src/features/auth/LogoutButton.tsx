@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, ButtonProps } from '@mui/material';
 import { useLogoutMutation } from './authApi';
 import { useAppDispatch } from '@/app/store';
 import { logout as logoutAction } from '@/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-const LogoutButton: React.FC = () => {
+interface LogoutButtonProps extends ButtonProps {}
+
+const LogoutButton: React.FC<LogoutButtonProps> = ({ children, ...props }) => {
   const [logoutApi, { isLoading }] = useLogoutMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -21,8 +23,14 @@ const LogoutButton: React.FC = () => {
   };
 
   return (
-    <Button variant="outlined" color="secondary" onClick={handleLogout} disabled={isLoading} sx={{ mt: 2 }}>
-      {isLoading ? 'Logging out...' : 'Logout'}
+    <Button
+      variant="text"
+      color="inherit"
+      onClick={handleLogout}
+      disabled={isLoading}
+      {...props}
+    >
+      {isLoading ? 'Logging out...' : (children || 'Logout')}
     </Button>
   );
 };

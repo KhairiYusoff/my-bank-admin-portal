@@ -1,18 +1,47 @@
 .loginContainer {
   max-width: 400px;
   margin: 0 auto;
-  padding: 32px;
+  padding: 40px;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.loginContainer::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  z-index: -1;
 }
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
+  margin-top: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a237e;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #546e7a;
+  margin-bottom: 32px;
+  text-align: center;
 }

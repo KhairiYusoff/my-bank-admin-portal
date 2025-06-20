@@ -8,12 +8,19 @@ import { setCredentials } from '@/features/auth/authSlice';
 import styles from './LoginForm.module.css';
 import { 
   Button, 
-  TextField, 
+  Alert, 
+  CircularProgress, 
   Typography, 
   Box, 
-  Alert,
-  CircularProgress
+  Paper, 
+  TextField, 
+  InputAdornment, 
+  IconButton
 } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 
 // Define validation schema
@@ -31,6 +38,7 @@ const loginSchema = yup.object().shape({
 type LoginFormData = yup.InferType<typeof loginSchema>;
 
 const LoginForm: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
@@ -91,7 +99,17 @@ const LoginForm: React.FC = () => {
 
   return (
     <Box className={styles.loginContainer}>
-      <Typography variant="h5" gutterBottom>Admin Login</Typography>
+      <Box sx={{ mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img
+          src="/bank-logo.svg"
+          alt="My Bank Admin"
+          style={{ width: 60, height: 60, marginBottom: 16 }}
+        />
+        <Typography component="h1" variant="h5" sx={{ color: '#1976d2', fontWeight: 500 }}>
+          Welcome Back
+        </Typography>
+      </Box>
+      <Typography className={styles.subtitle}>Sign in to your admin account</Typography>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <Controller
           name="email"
@@ -106,6 +124,13 @@ const LoginForm: React.FC = () => {
               error={!!errors.email}
               helperText={errors.email?.message}
               disabled={isLoading}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircleIcon color={errors.email ? 'error' : 'action'} />
+                  </InputAdornment>
+                ),
+              }}
             />
           )}
         />
@@ -116,19 +141,37 @@ const LoginForm: React.FC = () => {
             <TextField
               {...field}
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               margin="normal"
               error={!!errors.password}
               helperText={errors.password?.message}
               disabled={isLoading}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon color={errors.password ? 'error' : 'action'} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           )}
         />
         {apiError && (
-          <Alert severity="error" sx={{ mt: 2, mb: 1 }}>
-            {apiError}
-          </Alert>
+          <Paper elevation={3} sx={{ p: 4, width: '100%', maxWidth: '500px', borderRadius: 2 }}>
+            <Alert severity="error">{apiError}</Alert>
+          </Paper>
         )}
         <Button
           type="submit"
@@ -136,7 +179,17 @@ const LoginForm: React.FC = () => {
           color="primary"
           fullWidth
           disabled={isLoading}
-          sx={{ mt: 2 }}
+          sx={{
+            mt: 3,
+            mb: 2,
+            py: 1.5,
+            fontSize: '1rem',
+            fontWeight: 500,
+            backgroundColor: '#1976d2',
+            '&:hover': {
+              backgroundColor: '#115293'
+            }
+          }}
           startIcon={isLoading ? <CircularProgress size={20} /> : null}
         >
           {isLoading ? 'Logging in...' : 'Login'}

@@ -45,11 +45,25 @@ const AdminLayout: React.FC = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            My Bank Admin
-          </Typography>
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: '#1976d2',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
+        <Toolbar sx={{ gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <img
+              src="/bank-logo.svg"
+              alt="My Bank Admin"
+              style={{ width: 32, height: 32 }}
+            />
+            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 500 }}>
+              My Bank Admin
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -62,36 +76,61 @@ const AdminLayout: React.FC = () => {
       >
         <Toolbar />
         <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
-          <List sx={{ flex: 1, overflow: 'auto' }}>
+          <List sx={{ flex: 1, overflow: 'auto', py: 2 }}>
             {navItems.map(({ label, path, icon }) => (
               <ListItem key={label} disablePadding>
                 <ListItemButton
                   component={Link}
                   to={path}
                   selected={location.pathname === path}
+                  sx={{
+                    borderRadius: 1,
+                    mx: 1,
+                    '&.Mui-selected': {
+                      backgroundColor: (theme) => theme.palette.action.selected,
+                      '&:hover': {
+                        backgroundColor: (theme) => theme.palette.action.hover
+                      }
+                    },
+                    '&:hover': {
+                      backgroundColor: (theme) => theme.palette.action.hover
+                    }
+                  }}
                 >
-                  <ListItemIcon sx={{ color: location.pathname === path ? 'primary.main' : 'inherit' }}>
+                  <ListItemIcon
+                    sx={{
+                      color: location.pathname === path ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.secondary,
+                      minWidth: 40
+                    }}
+                  >
                     {icon}
                   </ListItemIcon>
-                  <ListItemText primary={label} />
+                  <ListItemText
+                    primary={label}
+                    sx={{
+                      '& .MuiTypography-root': {
+                        fontWeight: location.pathname === path ? 500 : 400
+                      }
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
-          <Divider />
-          <Box>
+          <Box sx={{ mt: 'auto', mb: 2 }}>
+            <Divider sx={{ my: 1 }} />
             <ListItem disablePadding>
-              <ListItemButton onClick={() => {/* Add logout logic */}} sx={{
-                py: 2,
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                }
-              }}>
-                <ListItemIcon>
-                  <LogoutIcon />
-                </ListItemIcon>
-                <ListItemText primary="Logout" />
-              </ListItemButton>
+              <LogoutButton
+                sx={{
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  py: 2,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                  }
+                }}
+                startIcon={<LogoutIcon />}
+              />
             </ListItem>
           </Box>
         </Box>

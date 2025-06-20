@@ -5,9 +5,11 @@ export const tableContainerStyles: SxProps<Theme> = {
   width: '100%',
   border: '1px solid rgba(224, 224, 224, 1)',
   borderRadius: 1,
+  overflowX: 'auto', // Enable horizontal scrolling for small screens
   overflowY: 'hidden', // Prevent vertical scrolling
   '& .MuiTable-root': {
     width: '100%',
+    minWidth: '750px', // Minimum width before horizontal scroll
     tableLayout: 'fixed', // Ensure equal column distribution
   }
 };
@@ -22,8 +24,21 @@ export const tableStyles: SxProps<Theme> = {
     borderBottom: '1px solid rgba(224, 224, 224, 1)',
     borderRight: '1px solid rgba(224, 224, 224, 1)',
     padding: '16px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     '&:last-child': {
       borderRight: 'none',
+    },
+    // Add hover effect to show full content
+    '&:hover': {
+      overflow: 'visible',
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+      position: 'relative',
+      zIndex: 1,
+      backgroundColor: '#fff',
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
     }
   },
   '& .MuiTableHead-root': {
