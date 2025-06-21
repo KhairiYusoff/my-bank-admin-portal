@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useGetAllCustomersQuery, User } from '@/features/admin/store/adminApi';
 import { 
   Box, 
@@ -13,13 +14,27 @@ import {
   CircularProgress, 
   Alert,
   Chip,
-  TablePagination
+  TablePagination,
+  Button
 } from '@mui/material';
 import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
+import UserActivityModal from '@/features/admin/components/UserActivityModal';
 
 const UsersList: React.FC = () => {
+  const [isActivityModalOpen, setActivityModalOpen] = React.useState(false);
+  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleOpenActivityModal = (userId: string) => {
+    setSelectedUserId(userId);
+    setActivityModalOpen(true);
+  };
+
+  const handleCloseActivityModal = () => {
+    setActivityModalOpen(false);
+    setSelectedUserId(null);
+  };
+
   const { data, error, isLoading } = useGetAllCustomersQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
@@ -82,6 +97,7 @@ const UsersList: React.FC = () => {
                 <TableCell width="15%">Status</TableCell>
                 <TableCell width="10%">Verified</TableCell>
                 <TableCell width="15%">Created At</TableCell>
+                <TableCell width="10%">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -89,13 +105,10 @@ const UsersList: React.FC = () => {
                 <TableRow key={user._id}>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phoneNumber || 'N/A'}</TableCell>
+                  <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    {user.accountType ? user.accountType.charAt(0).toUpperCase() + user.accountType.slice(1) : 'N/A'}
-                  </TableCell>
-                  <TableCell>
-                    <Chip 
-                      label={user.applicationStatus || 'N/A'} 
+                    <Chip
+                      label={user.applicationStatus || 'N/A'}
                       color={getStatusColor(user.applicationStatus) as any}
                       size="small"
                     />
@@ -103,6 +116,15 @@ const UsersList: React.FC = () => {
                   <TableCell>{user.isVerified ? 'Yes' : 'No'}</TableCell>
                   <TableCell>
                     {new Date(user.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      variant="outlined" 
+                      size="small"
+                      onClick={() => handleOpenActivityModal(user._id)}
+                    >
+                      View Activity
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -131,7 +153,11 @@ const UsersList: React.FC = () => {
             No users found
           </Alert>
         )
-      )}
+      )}\n      <UserActivityModal 
+        open={isActivityModalOpen} 
+        onClose={handleCloseActivityModal} 
+        userId={selectedUserId} 
+      />
     </Box>
   );
 };
