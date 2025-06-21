@@ -1,19 +1,19 @@
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { RootState } from '@/app/store';
 
+// Create base query with credentials for cookie-based auth
 const baseQuery = fetchBaseQuery({
-  credentials: 'include',
   baseUrl: '/api', // Using Vite proxy
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
+    // For cookie-based auth, we don't need to set Authorization header
+    // The browser will automatically include cookies with each request
     headers.set('Content-Type', 'application/json');
-    const token = (getState() as RootState).auth.token;
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
-    }
     return headers;
   },
 });
 
+// Simple wrapper for baseQuery that handles 401 errors
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
@@ -21,28 +21,20 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
   let result = await baseQuery(args, api, extraOptions);
   
+  // Handle 401 Unauthorized
   if (result.error?.status === 401) {
-    // Try to get a new token
-    const refreshResult = await baseQuery(
-      { url: '/auth/refresh-token', method: 'POST' },
-      api,
-      extraOptions
-    );
-    
-    if (refreshResult.data) {
-      // Retry the initial query
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      // Refresh failed - clear auth state and redirect to login
-      api.dispatch({ type: 'auth/logout' });
-      window.location.href = '/login';
-    }
+    // If we get a 401, the session might have expired
+    // Redirect to login page
+    window.location.href = '/login';
+    // Clear any existing auth state
+    api.dispatch({ type: 'auth/logout' });
   }
   
   return result;
 };
 
-export const api = createApi({
+// Create the base API
+const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
@@ -58,4 +50,6 @@ export const api = createApi({
   ],
 });
 
-export const { middleware: apiMiddleware, reducerPath: apiReducerPath, reducer: apiReducer } = api;
+// Export the API instance and its types
+export { api };
+export const { middleware: apiMiddleware, reducer: apiReducer, reducerPath } = api;

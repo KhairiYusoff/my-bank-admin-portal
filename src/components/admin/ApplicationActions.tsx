@@ -16,7 +16,7 @@ import {
   Verified as VerifyIcon,
   MoreVert as MoreIcon,
 } from '@mui/icons-material';
-import { ConfirmationDialog } from '@/components/ConfirmationDialog';
+import { ConfirmationDialog } from '@/components/shared/ConfirmationDialog';
 
 interface ActionButtonProps {
   onApprove: () => Promise<void>;

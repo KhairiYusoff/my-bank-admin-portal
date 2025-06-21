@@ -1,77 +1,40 @@
-import React from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import LoginForm from '@/features/auth/LoginForm';
-import Dashboard from '@/features/dashboard/Dashboard';
-import UsersList from '@/features/users/UsersList';
-import CreateStaff from '@/features/admin/CreateStaff';
-import PendingApplications from '@/features/admin/PendingApplications';
-import AdminLayout from 'components/AdminLayout';
-import TransactionsList from '@/features/transactions/TransactionsList';
-import AccountsList from '@/features/accounts/AccountsList';
-import Airdrop from '@/features/admin/Airdrop';
-import Profile from '@/features/common/Profile';
-import ProtectedRoute from '@/features/auth/ProtectedRoute';
-import { useAppDispatch } from '@/app/hooks';
-import { updateActivity } from '@/features/auth/authSlice';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
 
-// Component to track user activity
-const ActivityTracker = () => {
-  const dispatch = useAppDispatch();
-  const location = useLocation();
+// Lazy load route components
+const Dashboard = lazy(() => import('@/features/dashboard/components/Dashboard'));
+const UsersList = lazy(() => import('@/features/users/components/UsersList'));
+const CreateStaff = lazy(() => import('@/features/admin/components/CreateStaff'));
+const PendingApplications = lazy(() => import('@/features/admin/components/PendingApplications'));
+const TransactionsList = lazy(() => import('@/features/transactions/components/TransactionsList'));
+const AccountsList = lazy(() => import('@/features/accounts/components/AccountsList'));
+const Airdrop = lazy(() => import('@/features/admin/components/Airdrop'));
+const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
 
-  React.useEffect(() => {
-    const handleActivity = () => {
-      dispatch(updateActivity());
-    };
+// Extend RouteObject to include requiresAuth
+interface AppRoute extends Omit<RouteObject, 'children'> {
+  requiresAuth?: boolean;
+  children?: AppRoute[];
+}
 
-    // Track mouse movements, clicks, and key presses
-    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'click'];
-    events.forEach(event => {
-      window.addEventListener(event, handleActivity);
-    });
+// Helper function to create route config with proper typing
+const createRoute = (path: string, element: React.ReactNode, requiresAuth = true): AppRoute => ({
+  path,
+  element,
+  requiresAuth,
+});
 
-    // Update activity on route change
-    handleActivity();
+// Define routes configuration
+export const routes: AppRoute[] = [
+  createRoute('/dashboard', <Dashboard />),
+  createRoute('/users', <UsersList />),
+  createRoute('/create-staff', <CreateStaff />),
+  createRoute('/pending-applications', <PendingApplications />),
+  createRoute('/transactions', <TransactionsList />),
+  createRoute('/accounts', <AccountsList />),
+  createRoute('/airdrop', <Airdrop />),
+  createRoute('/profile', <ProfilePage />),
+];
 
-    return () => {
-      events.forEach(event => {
-        window.removeEventListener(event, handleActivity);
-      });
-    };
-  }, [dispatch, location]);
-
-  return null;
-};
-
-const AppRoutes = () => (
-  <>
-    <ActivityTracker />
-    <Routes>
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="/unauthorized" element={<div>Unauthorized access</div>} />
-
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="users" element={<UsersList />} />
-        <Route path="create-staff" element={<CreateStaff />} />
-        <Route path="pending-applications" element={<PendingApplications />} />
-        <Route path="transactions" element={<TransactionsList />} />
-        <Route path="accounts" element={<AccountsList />} />
-        <Route path="airdrop" element={<Airdrop />} />
-        <Route path="profile" element={<Profile />} />
-      </Route>
-
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  </>
-);
-
-export default AppRoutes;
+// Export default for backward compatibility
+export default routes;

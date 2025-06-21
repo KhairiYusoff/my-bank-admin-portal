@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { CreateStaffRequest } from '../adminApi';
+import { CreateStaffRequest } from '@/features/admin/store/adminApi';
 
 const staffSchema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -26,7 +26,7 @@ const staffSchema = yup.object().shape({
     .required('Password is required'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .oneOf([yup.ref('password'), undefined], 'Passwords must match')
     .required('Please confirm your password'),
   role: yup.string().oneOf(['admin', 'banker']).required('Role is required'),
 });
