@@ -280,7 +280,7 @@ export const adminApi = api.injectEndpoints({
     // Staff Management
     getStaffMembers: builder.query<StaffListResponse, { page: number; limit: number }>({
       query: ({ page, limit }: { page: number; limit: number }) => ({
-        url: '/admin/staff',
+        url: '/users/staff',
         method: 'GET',
         params: { page, limit },
       }),

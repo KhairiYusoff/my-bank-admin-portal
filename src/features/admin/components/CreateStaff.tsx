@@ -1,24 +1,45 @@
-import React, { useState } from 'react';
-import { Box, Typography, Alert, Snackbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useCreateStaffMutation } from "@/features/admin/store/adminApi";
+import React, { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Alert,
+  Snackbar,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useCreateStaffMutation, CreateStaffRequest } from "@/features/admin/store/adminApi";
 import { CreateStaffForm } from '@/components/admin/CreateStaffForm';
 
-const CreateStaff: React.FC = () => {
-  const navigate = useNavigate();
-  const [createStaff, { isLoading, error }] = useCreateStaffMutation();
+interface CreateStaffModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+const CreateStaffModal: React.FC<CreateStaffModalProps> = ({ open, onClose, onSuccess }) => {
+  const [createStaff, { isLoading, error, isSuccess, reset }] = useCreateStaffMutation();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (data: { name: string; email: string; password: string; role: 'admin' | 'banker' }) => {
+  useEffect(() => {
+    if (isSuccess) {
+      setSuccessMessage('Staff member created successfully!');
+      onSuccess();
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
+    }
+  }, [isSuccess, onSuccess]);
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
+  const handleSubmit = async (data: Omit<CreateStaffRequest, 'confirmPassword'>) => {
     try {
       await createStaff(data).unwrap();
-      setSuccessMessage('Staff member created successfully!');
-      // Redirect to dashboard after a short delay
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
     } catch (err) {
-      // Error is handled by the error state from the mutation
       console.error('Failed to create staff:', err);
     }
   };
@@ -28,19 +49,32 @@ const CreateStaff: React.FC = () => {
   };
 
   return (
-    <Box p={3}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Create New Staff Member
-      </Typography>
-      
-      <Box mt={4} maxWidth="md">
-        <CreateStaffForm
-          onSubmit={handleSubmit}
-          loading={isLoading}
-          error={error ? 'Failed to create staff member. Please try again.' : undefined}
-        />
-      </Box>
-
+    <>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          Create New Staff Member
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <CreateStaffForm
+            onSubmit={handleSubmit}
+            loading={isLoading}
+            error={error ? 'Failed to create staff member. Please try again.' : undefined}
+            onCancel={handleClose}
+          />
+        </DialogContent>
+      </Dialog>
       <Snackbar
         open={!!successMessage}
         autoHideDuration={6000}
@@ -51,8 +85,8 @@ const CreateStaff: React.FC = () => {
           {successMessage}
         </Alert>
       </Snackbar>
-    </Box>
+    </>
   );
 };
 
-export default CreateStaff;
+export default CreateStaffModal;

@@ -4,12 +4,12 @@ import { RouteObject } from 'react-router-dom';
 // Lazy load route components
 const Dashboard = lazy(() => import('@/features/dashboard/components/Dashboard'));
 const UsersList = lazy(() => import('@/features/users/components/UsersList'));
-const CreateStaff = lazy(() => import('@/features/admin/components/CreateStaff'));
 const PendingApplications = lazy(() => import('@/features/admin/components/PendingApplications'));
 const TransactionsList = lazy(() => import('@/features/transactions/components/TransactionsList'));
 const AccountsList = lazy(() => import('@/features/accounts/components/AccountsList'));
 const Airdrop = lazy(() => import('@/features/admin/components/Airdrop'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
+const StaffPage = lazy(() => import('@/features/admin/pages/StaffPage'));
 
 // Extend RouteObject to include requiresAuth
 interface AppRoute extends Omit<RouteObject, 'children'> {
@@ -28,12 +28,12 @@ const createRoute = (path: string, element: React.ReactNode, requiresAuth = true
 export const routes: AppRoute[] = [
   createRoute('/dashboard', <Dashboard />),
   createRoute('/users', <UsersList />),
-  createRoute('/create-staff', <CreateStaff />),
   createRoute('/pending-applications', <PendingApplications />),
   createRoute('/transactions', <TransactionsList />),
   createRoute('/accounts', <AccountsList />),
   createRoute('/airdrop', <Airdrop />),
   createRoute('/profile', <ProfilePage />),
+  createRoute('/staff', <StaffPage />),
 ];
 
 // Export default for backward compatibility

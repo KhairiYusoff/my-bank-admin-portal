@@ -31,6 +31,7 @@ const drawerWidth = 240;
 const navItems: { label: string; path: string; icon: JSX.Element }[] = [
   { label: 'Admin Dashboard', path: '/', icon: <DashboardIcon /> },
   { label: 'User Management', path: '/users', icon: <PeopleIcon /> },
+  { label: 'Staff Management', path: '/staff', icon: <PersonAddIcon /> },
   { label: 'Account Management', path: '/accounts', icon: <AccountBalanceIcon /> },
   { label: 'Applications', path: '/pending-applications', icon: <PendingActionsIcon /> },
   { label: 'Transaction History', path: '/transactions', icon: <SwapHorizIcon /> },
