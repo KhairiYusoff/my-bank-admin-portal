@@ -235,6 +235,9 @@ export interface StaffMember {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  applicationStatus: string;
+  isVerified: boolean;
+  isProfileComplete: boolean;
 }
 
 export interface StaffListResponse extends BaseResponse {
