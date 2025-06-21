@@ -210,6 +210,7 @@ export interface PendingApplication {
   email: string;
   phoneNumber?: string;
   identityNumber?: string;
+  applicationStatus: string;
   createdAt: string;
 }
 

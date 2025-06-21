@@ -13,12 +13,12 @@ import {
   TableContainer,
   CircularProgress, 
   Alert,
-  Chip,
   TablePagination,
   Button
 } from '@mui/material';
 import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 import UserActivityModal from '@/features/admin/components/UserActivityModal';
+import StatusChip from '@/components/shared/StatusChip';
 
 const UsersList: React.FC = () => {
   const [isActivityModalOpen, setActivityModalOpen] = React.useState(false);
@@ -50,22 +50,7 @@ const UsersList: React.FC = () => {
     setPage(0);
   };
 
-  const getStatusColor = (status: string) => {
-    if (!status) return 'default';
-    switch (status.toLowerCase()) {
-      case 'active':
-      case 'completed':
-        return 'success';
-      case 'inactive':
-      case 'pending':
-        return 'warning';
-      case 'suspended':
-      case 'rejected':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
+
 
   return (
     <Box sx={{ width: '100%', p: 2 }}>
@@ -107,11 +92,7 @@ const UsersList: React.FC = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    <Chip
-                      label={user.applicationStatus || 'N/A'}
-                      color={getStatusColor(user.applicationStatus) as any}
-                      size="small"
-                    />
+                    <StatusChip status={user.applicationStatus} />
                   </TableCell>
                   <TableCell>{user.isVerified ? 'Yes' : 'No'}</TableCell>
                   <TableCell>

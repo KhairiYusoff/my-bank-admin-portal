@@ -23,6 +23,7 @@ import {
   PendingApplication,
 } from "@/features/admin/store/adminApi";
 import { ApplicationActions } from '@/components/admin/ApplicationActions';
+import StatusChip from '@/components/shared/StatusChip';
 
 type Order = 'asc' | 'desc';
 
@@ -137,6 +138,7 @@ const PendingApplications: React.FC = () => {
                       Submitted At
                     </TableSortLabel>
                   </TableCell>
+                  <TableCell>Status</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -151,6 +153,9 @@ const PendingApplications: React.FC = () => {
                       <TableCell>
                         {new Date(application.createdAt).toLocaleString()}
                       </TableCell>
+                      <TableCell>
+                        <StatusChip status={application.applicationStatus} />
+                      </TableCell>
                       <TableCell align="right">
                         <ApplicationActions
                           onApprove={() => handleApproveApplication(application._id)}
@@ -163,7 +168,7 @@ const PendingApplications: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                       <Typography variant="body1" color="textSecondary">
                         No pending applications found
                       </Typography>
