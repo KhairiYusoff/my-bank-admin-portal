@@ -27,6 +27,7 @@ export const tableStyles: SxProps<Theme> = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    textAlign: 'center',
     '&:last-child': {
       borderRight: 'none',
     },

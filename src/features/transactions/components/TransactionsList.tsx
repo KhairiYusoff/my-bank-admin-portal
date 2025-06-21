@@ -20,6 +20,7 @@ import {
 import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
 import { formatCurrency, formatDateTime } from '@/utils/formatters';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import StatusChip from '@/components/shared/StatusChip';
 
 const TransactionsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
@@ -39,20 +40,6 @@ const TransactionsList: React.FC = () => {
     setPage(0);
   };
 
-  const getStatusColor = (status: string) => {
-    if (!status) return 'default';
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return 'success';
-      case 'pending':
-        return 'warning';
-      case 'failed':
-      case 'cancelled':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
 
   const getTypeColor = (type: string) => {
     if (!type) return 'default';
@@ -98,7 +85,7 @@ const TransactionsList: React.FC = () => {
               <TableRow>
                 <TableCell>Reference</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell align="right">Amount</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Actions</TableCell>
@@ -117,12 +104,12 @@ const TransactionsList: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Chip 
-                      label={transaction.type?.toUpperCase() || 'UNKNOWN'} 
+                      label={transaction.type || 'UNKNOWN'} 
                       color={getTypeColor(transaction.type) as any} 
                       size="small" 
                     />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     <Typography 
                       color={transaction.amount < 0 ? 'error' : 'success'}
                       fontWeight="medium"
@@ -131,11 +118,7 @@ const TransactionsList: React.FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={transaction.status?.toUpperCase() || 'UNKNOWN'} 
-                      color={getStatusColor(transaction.status) as any} 
-                      size="small" 
-                    />
+                    <StatusChip status={transaction.status} />
                   </TableCell>
                   <TableCell>
                     <Box>

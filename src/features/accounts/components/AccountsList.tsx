@@ -22,6 +22,7 @@ import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/compone
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import StatusChip from '@/components/shared/StatusChip';
 
 const AccountsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
@@ -41,19 +42,6 @@ const AccountsList: React.FC = () => {
     setPage(0);
   };
 
-  const getStatusColor = (status: Account['status']) => {
-    switch (status) {
-      case 'active':
-        return 'success';
-      case 'inactive':
-        return 'warning';
-      case 'suspended':
-      case 'dormant':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
 
   const getAccountTypeColor = (type: string) => {
     switch (type?.toLowerCase()) {
@@ -100,7 +88,7 @@ const AccountsList: React.FC = () => {
                 <TableCell>Account</TableCell>
                 <TableCell>Holder</TableCell>
                 <TableCell>Type</TableCell>
-                <TableCell align="right">Balance</TableCell>
+                <TableCell>Balance</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Opened</TableCell>
                 <TableCell>Actions</TableCell>
@@ -139,17 +127,13 @@ const AccountsList: React.FC = () => {
                       size="small" 
                     />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     <Typography fontWeight="medium">
                       {formatCurrency(account.balance)}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={account.status ? account.status.charAt(0).toUpperCase() + account.status.slice(1) : 'Unknown'}
-                      color={getStatusColor(account.status) as any} 
-                      size="small" 
-                    />
+                    <StatusChip status={account.status} />
                   </TableCell>
                   <TableCell>
                     {formatDate(account.dateOpened, 'MMM d, yyyy')}

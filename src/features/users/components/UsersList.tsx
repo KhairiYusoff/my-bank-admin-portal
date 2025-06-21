@@ -53,7 +53,7 @@ const UsersList: React.FC = () => {
 
 
   return (
-    <Box sx={{ width: '100%', p: 2 }}>
+    <Box sx={{ width: '100%'}}>
       <Typography variant="h5" gutterBottom>
         All Users
       </Typography>

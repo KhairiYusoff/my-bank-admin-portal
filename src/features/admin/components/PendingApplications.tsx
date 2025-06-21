@@ -96,12 +96,10 @@ const PendingApplications: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" component="h1">
+    <Box sx={{ width: '100%'}}>
+        <Typography variant="h5" component="h1" gutterBottom>
           Pending Applications
         </Typography>
-      </Box>
       
       {isLoading ? (
         <Box display="flex" justifyContent="center" p={4}>
@@ -139,7 +137,7 @@ const PendingApplications: React.FC = () => {
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -156,7 +154,7 @@ const PendingApplications: React.FC = () => {
                       <TableCell>
                         <StatusChip status={application.applicationStatus} />
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         <ApplicationActions
                           onApprove={() => handleApproveApplication(application._id)}
                           onVerify={() => handleVerifyCustomer(application._id)}
