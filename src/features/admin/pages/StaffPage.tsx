@@ -16,8 +16,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import CreateStaffModal from "../components/CreateStaff";
-import { useGetStaffMembersQuery, StaffMember } from "../store/adminApi";
+import CreateStaffModal from "@/features/admin/components/CreateStaff";
+import { useGetStaffMembersQuery, StaffMember } from "@/features/admin/store/adminApi";
 import {
   tableContainerStyles,
   tableStyles,

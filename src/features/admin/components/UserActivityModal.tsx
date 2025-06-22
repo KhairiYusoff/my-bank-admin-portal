@@ -4,7 +4,7 @@ import {
   CircularProgress, Alert, TablePagination, Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useGetUserActivityQuery, Activity } from '../store/adminApi';
+import { useGetUserActivityQuery, Activity } from '@/features/admin/store/adminApi';
 import EmptyState from '@/components/shared/EmptyState';
 import HistoryEduOutlinedIcon from '@mui/icons-material/HistoryEduOutlined';
 
