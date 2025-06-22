@@ -13,8 +13,8 @@ import { theme } from "./app/theme";
 import { routes } from "./routes";
 import AdminLayout from "./components/layout/AdminLayout";
 import SessionTimeout from "./features/auth/components/SessionTimeout";
-import ErrorBoundary from "./components/ErrorBoundary";
-import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorBoundary from "./components/shared/ErrorBoundary";
+import LoadingSpinner from "./components/shared/LoadingSpinner";
 
 // Lazy load components for better performance
 const Login = lazy(() => import("./features/auth/pages/LoginForm"));

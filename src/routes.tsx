@@ -1,5 +1,5 @@
-import { lazy } from "react";
-import { RouteObject } from "react-router-dom";
+import React, { lazy } from "react";
+import { RouteObject, useNavigate } from "react-router-dom";
 
 // Lazy load route components
 const Dashboard = lazy(
@@ -16,8 +16,8 @@ const AccountsList = lazy(
   () => import("@/features/accounts/pages/AccountsList")
 );
 const Airdrop = lazy(() => import("@/features/admin/components/Airdrop"));
-const ProfilePage = lazy(() => import("@/features/profile/pages/ProfilePage"));
 const StaffPage = lazy(() => import("@/features/admin/pages/StaffPage"));
+const NotFoundPage = lazy(() => import("@/components/shared/NotFoundPage"));
 
 // Extend RouteObject to include requiresAuth
 interface AppRoute extends Omit<RouteObject, "children"> {
@@ -44,9 +44,8 @@ export const routes: AppRoute[] = [
   createRoute("/transactions", <TransactionsList />),
   createRoute("/accounts", <AccountsList />),
   createRoute("/airdrop", <Airdrop />),
-  createRoute("/profile", <ProfilePage />),
   createRoute("/staff", <StaffPage />),
+  createRoute("*", <NotFoundPage />, false),
 ];
 
-// Export default for backward compatibility
 export default routes;
