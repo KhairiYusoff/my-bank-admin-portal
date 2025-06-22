@@ -1,1 +1,2 @@
-export { default as TransactionsList } from './TransactionsList';
+// Component exports
+export {};

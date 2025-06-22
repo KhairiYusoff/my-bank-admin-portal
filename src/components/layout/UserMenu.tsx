@@ -27,10 +27,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/store/authSlice';
 import { useGetProfileQuery } from '@/features/auth/store/authApi';
 import { UserProfile } from '@/types/user';
-import Profile from '@/features/auth/components/Profile';
-import ProfileEditForm from '@/features/auth/components/ProfileEditForm';
-import ChangePasswordForm from '@/features/auth/components/ChangePasswordForm';
-import PreferencesForm from '@/features/auth/components/PreferencesForm';
+import { Profile, ProfileEditForm, ChangePasswordForm, PreferencesForm } from '@/features/profile/components';
 
 const UserMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

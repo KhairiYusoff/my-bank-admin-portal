@@ -22,8 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useGetProfileQuery } from '@/features/auth/store/authApi';
 import { format } from 'date-fns';
-import ProfileEditForm from '@/features/auth/components/ProfileEditForm';
-import ChangePasswordForm from '@/features/auth/components/ChangePasswordForm';
+import { ProfileEditForm, ChangePasswordForm } from '@/features/profile/components';
 import { UserProfile } from '@/types/user';
 
 const ProfilePage: React.FC = () => {
