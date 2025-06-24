@@ -73,15 +73,15 @@ const UserActivityModal: React.FC<UserActivityModalProps> = ({ open, onClose, us
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity: Activity) => (
-                <TableRow key={activity._id}>
-                  <TableCell>{new Date(activity.createdAt).toLocaleString()}</TableCell>
-                  <TableCell>{activity.action}</TableCell>
-                  <TableCell>{activity.status}</TableCell>
-                  <TableCell>{activity.severity}</TableCell>
-                  <TableCell>{activity.ipAddress}</TableCell>
-                </TableRow>
-              ))}
+              {activities.map((activity: Activity, idx: number) => (
+  <TableRow key={activity._id || idx}>
+    <TableCell>{new Date(activity.createdAt).toLocaleString()}</TableCell>
+    <TableCell>{activity.action}</TableCell>
+    <TableCell>{activity.status}</TableCell>
+    <TableCell>{activity.severity}</TableCell>
+    <TableCell>{activity.ipAddress}</TableCell>
+  </TableRow>
+))}
             </TableBody>
           </Table>
         </TableContainer>
