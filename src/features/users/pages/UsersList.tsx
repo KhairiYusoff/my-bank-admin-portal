@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useGetAllCustomersQuery } from '@/features/users/store/usersApi';
+import { useGetAllCustomersQuery } from "@/features/users/store/usersApi";
 import type { User } from "@/features/admin/store/adminApi";
 import {
   Box,
@@ -125,18 +125,9 @@ const UsersList: React.FC = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelRowsPerPage="Rows per page:"
-            labelDisplayedRows={({ from, to, count }) => (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  width: "100%",
-                }}
-              >
-                {`${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`}
-              </Box>
-            )}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`
+            }
           />
         </Paper>
       ) : (
