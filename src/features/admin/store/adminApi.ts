@@ -370,20 +370,6 @@ export const adminApi = api.injectEndpoints({
     }),
 
     // Account Management
-    getAllAccounts: builder.query<AccountsResponse, AccountsQueryParams>({
-      query: (params: AccountsQueryParams) => ({
-        url: '/accounts/all',
-        method: 'GET',
-        params: {
-          page: params.page || 1,
-          limit: params.limit || 20,
-          sort: params.sort || 'desc',
-          ...(params.status && { status: params.status }),
-          ...(params.type && { type: params.type }),
-        },
-      }),
-      providesTags: ['Account'],
-    }),
 
     getAllTransactions: builder.query<TransactionsResponse, TransactionsQueryParams>({
       query: (params: TransactionsQueryParams) => ({
@@ -400,14 +386,6 @@ export const adminApi = api.injectEndpoints({
       providesTags: ['Transactions'],
     }),
 
-    airdrop: builder.mutation<AirdropResponse, AirdropRequest>({
-      query: (airdropData: AirdropRequest) => ({
-        url: '/accounts/airdrop',
-        method: 'POST',
-        body: airdropData,
-      }),
-      invalidatesTags: ['Account', 'Transactions'],
-    }),
   }),
 });
 
@@ -418,8 +396,8 @@ export const {
   useCreateStaffMutation,
   useApproveApplicationMutation,
   useVerifyCustomerMutation,
-  useAirdropMutation,
+
   useGetAllCustomersQuery,
-  useGetAllAccountsQuery,
+
   useGetAllTransactionsQuery,
 } = adminApi;

@@ -22,7 +22,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import InfoIcon from '@mui/icons-material/Info';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { LoadingButton } from '@mui/lab';
-import { useAirdropMutation } from "@/features/admin/store/adminApi";
+import { useAirdropMutation } from '@/features/accounts/store/accountsApi';
 
 interface SnackbarState {
   open: boolean;
