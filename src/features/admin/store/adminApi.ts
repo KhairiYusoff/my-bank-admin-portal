@@ -371,20 +371,6 @@ export const adminApi = api.injectEndpoints({
 
     // Account Management
 
-    getAllTransactions: builder.query<TransactionsResponse, TransactionsQueryParams>({
-      query: (params: TransactionsQueryParams) => ({
-        url: '/transactions/all',
-        method: 'GET',
-        params: {
-          page: params.page || 1,
-          limit: params.limit || 20,
-          sort: params.sort || 'desc',
-          ...(params.status && { status: params.status }),
-          ...(params.type && { type: params.type }),
-        },
-      }),
-      providesTags: ['Transactions'],
-    }),
 
   }),
 });
@@ -399,5 +385,5 @@ export const {
 
   useGetAllCustomersQuery,
 
-  useGetAllTransactionsQuery,
+
 } = adminApi;

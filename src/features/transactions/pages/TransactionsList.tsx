@@ -1,5 +1,6 @@
 import React from 'react';
-import { useGetAllTransactionsQuery, Transaction } from "@/features/admin/store/adminApi";
+import { useGetAllTransactionsQuery } from '@/features/transactions/store/transactionsApi';
+import type { Transaction } from "@/features/admin/store/adminApi";
 import { 
   Box, 
   Typography, 
