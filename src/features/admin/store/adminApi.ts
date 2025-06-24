@@ -1,5 +1,5 @@
-import { api } from '@/app/store/apiSlice';
-import type { EndpointBuilder } from '@reduxjs/toolkit/query';
+import { api } from "@/app/store/apiSlice";
+import type { EndpointBuilder } from "@reduxjs/toolkit/query";
 
 // Common Types
 interface BaseResponse {
@@ -73,7 +73,7 @@ export interface UsersResponse extends BaseResponse {
 export interface UsersQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
 }
 
 // Activity Log
@@ -116,7 +116,7 @@ export interface ActivityLogParams {
   startDate?: string;
   endDate?: string;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
 }
 
 // Account Management
@@ -156,7 +156,7 @@ export interface AccountsResponse extends BaseResponse {
 export interface AccountsQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   status?: string;
   type?: string;
 }
@@ -198,7 +198,7 @@ export interface TransactionsResponse extends BaseResponse {
 export interface TransactionsQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   status?: string;
   type?: string;
 }
@@ -231,7 +231,7 @@ export interface StaffMember {
   _id: string;
   name: string;
   email: string;
-  role: 'admin' | 'banker';
+  role: "admin" | "banker";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -254,7 +254,7 @@ export interface CreateStaffRequest {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'banker';
+  role: "admin" | "banker";
 }
 
 export interface CreateStaffResponse extends BaseResponse {
@@ -289,7 +289,7 @@ export interface PendingApplicationsQueryParams {
   page?: number;
   limit?: number;
   sortBy?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 }
 
 // Define tag types for cache invalidation
@@ -300,78 +300,68 @@ export const adminApi = api.injectEndpoints({
     getUserActivity: builder.query<ActivityLogResponse, ActivityLogParams>({
       query: ({ userId, ...params }) => ({
         url: `/users/activity/${userId}`,
-        method: 'GET',
+        method: "GET",
         params,
       }),
-      providesTags: (result, error, { userId }) => [{ type: 'UserActivity', id: userId }],
+      providesTags: (result, error, { userId }) => [
+        { type: "UserActivity", id: userId },
+      ],
     }),
 
     // User Management
     // Pending Applications
-    getPendingApplications: builder.query<PendingApplicationsResponse, PendingApplicationsQueryParams>({
+    getPendingApplications: builder.query<
+      PendingApplicationsResponse,
+      PendingApplicationsQueryParams
+    >({
       query: (params: PendingApplicationsQueryParams) => ({
-        url: '/admin/pending-applications',
-        method: 'GET',
+        url: "/admin/pending-applications",
+        method: "GET",
         params: {
           page: params.page,
           limit: params.limit,
           sortBy: params.sortBy,
-          order: params.order
+          order: params.order,
         },
       }),
-      providesTags: ['PendingApplications'],
+      providesTags: ["PendingApplications"],
     }),
 
     // Staff Management
-    getStaffMembers: builder.query<StaffListResponse, { page: number; limit: number }>({
-      query: ({ page, limit }: { page: number; limit: number }) => ({
-        url: '/users/staff',
-        method: 'GET',
-        params: { page, limit },
-      }),
-      providesTags: ['Staff'],
-    }),
-    createStaff: builder.mutation<CreateStaffResponse, CreateStaffRequest>({
-      query: (staffData: CreateStaffRequest) => ({
-        url: '/admin/create-staff',
-        method: 'POST',
-        body: staffData,
-      }),
-      invalidatesTags: ['Staff'],
-    }),
+    // getStaffMembers endpoint moved to features/staff/store/staffApi.ts
+    // createStaff mutation moved to features/staff/store/staffApi.ts
 
     // Application Management
-    approveApplication: builder.mutation<ApplicationActionResponse, { userId: string }>({
+    approveApplication: builder.mutation<
+      ApplicationActionResponse,
+      { userId: string }
+    >({
       query: ({ userId }: { userId: string }) => ({
         url: `/admin/approve-application/${userId}`,
-        method: 'POST',
+        method: "POST",
       }),
-      invalidatesTags: ['PendingApplications'],
+      invalidatesTags: ["PendingApplications"],
     }),
 
-    verifyCustomer: builder.mutation<ApplicationActionResponse, { userId: string }>({
+    verifyCustomer: builder.mutation<
+      ApplicationActionResponse,
+      { userId: string }
+    >({
       query: ({ userId }: { userId: string }) => ({
         url: `/admin/verify-customer/${userId}`,
-        method: 'POST',
+        method: "POST",
       }),
-      invalidatesTags: ['PendingApplications'],
+      invalidatesTags: ["PendingApplications"],
     }),
 
     // Account Management
-
-
   }),
 });
 
 export const {
   useGetUserActivityQuery,
   useGetPendingApplicationsQuery,
-  useGetStaffMembersQuery,
-  useCreateStaffMutation,
+
   useApproveApplicationMutation,
   useVerifyCustomerMutation,
-
-
-
-
 } = adminApi;

@@ -16,7 +16,7 @@ const AccountsList = lazy(
   () => import("@/features/accounts/pages/AccountsList")
 );
 const Airdrop = lazy(() => import("@/features/admin/components/Airdrop"));
-const StaffPage = lazy(() => import("@/features/admin/pages/StaffPage"));
+const StaffPage = lazy(() => import("@/features/staff/pages/StaffPage"));
 const NotFoundPage = lazy(() => import("@/components/shared/NotFoundPage"));
 
 // Extend RouteObject to include requiresAuth

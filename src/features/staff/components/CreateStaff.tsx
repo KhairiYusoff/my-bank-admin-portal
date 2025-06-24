@@ -8,7 +8,8 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useCreateStaffMutation, CreateStaffRequest } from "@/features/admin/store/adminApi";
+import { useCreateStaffMutation } from "@/features/staff/store/staffApi";
+import type { CreateStaffRequest } from "@/features/admin/store/adminApi";
 import { CreateStaffForm } from '@/components/admin/CreateStaffForm';
 
 interface CreateStaffModalProps {
