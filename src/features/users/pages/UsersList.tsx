@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useGetAllCustomersQuery, User } from "@/features/admin/store/adminApi";
+import { useGetAllCustomersQuery } from '@/features/users/store/usersApi';
+import type { User } from "@/features/admin/store/adminApi";
 import {
   Box,
   Typography,

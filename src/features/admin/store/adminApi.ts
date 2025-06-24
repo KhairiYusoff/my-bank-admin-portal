@@ -307,18 +307,6 @@ export const adminApi = api.injectEndpoints({
     }),
 
     // User Management
-    getAllCustomers: builder.query<UsersResponse, UsersQueryParams>({
-      query: (params: UsersQueryParams) => ({
-        url: '/users/customers',
-        method: 'GET',
-        params: {
-          page: params.page,
-          limit: params.limit,
-          sort: params.sort,
-        },
-      }),
-      providesTags: ['User'],
-    }),
     // Pending Applications
     getPendingApplications: builder.query<PendingApplicationsResponse, PendingApplicationsQueryParams>({
       query: (params: PendingApplicationsQueryParams) => ({
@@ -383,7 +371,7 @@ export const {
   useApproveApplicationMutation,
   useVerifyCustomerMutation,
 
-  useGetAllCustomersQuery,
+
 
 
 } = adminApi;
