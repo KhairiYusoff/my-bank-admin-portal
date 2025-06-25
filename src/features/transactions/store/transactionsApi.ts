@@ -1,24 +1,27 @@
-import { api } from '@/app/store/apiSlice';
+import { api } from "@/app/store/apiSlice";
 import type {
   TransactionsResponse,
-  TransactionsQueryParams
-} from '@/features/admin/store/adminApi';
+  TransactionsQueryParams,
+} from "@/features/transactions/types";
 
 export const transactionsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getAllTransactions: builder.query<TransactionsResponse, TransactionsQueryParams>({
+    getAllTransactions: builder.query<
+      TransactionsResponse,
+      TransactionsQueryParams
+    >({
       query: (params: TransactionsQueryParams) => ({
-        url: '/transactions/all',
-        method: 'GET',
+        url: "/transactions/all",
+        method: "GET",
         params: {
           page: params.page || 1,
           limit: params.limit || 20,
-          sort: params.sort || 'desc',
+          sort: params.sort || "desc",
           ...(params.status && { status: params.status }),
           ...(params.type && { type: params.type }),
         },
       }),
-      providesTags: ['Transactions'],
+      providesTags: ["Transactions"],
     }),
   }),
   overrideExisting: false,

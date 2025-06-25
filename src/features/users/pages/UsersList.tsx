@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useGetAllCustomersQuery } from "@/features/users/store/usersApi";
-import type { User } from "@/features/admin/store/adminApi";
+import type { User } from "@/features/users/types";
 import {
   Box,
   Typography,
@@ -100,7 +100,9 @@ const UsersList: React.FC = () => {
                     </TableCell>
                     <TableCell>{user.isVerified ? "Yes" : "No"}</TableCell>
                     <TableCell>
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {user.createdAt
+                        ? new Date(user.createdAt).toLocaleDateString()
+                        : "N/A"}
                     </TableCell>
                     <TableCell>
                       <Button

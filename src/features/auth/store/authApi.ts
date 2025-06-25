@@ -1,5 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '@/app/store';
+import type { Activity } from '@/features/admin/types/activity';
+import type {
+  LoginRequest,
+  LoginResponse,
+  LogoutResponse,
+  ChangePasswordRequest,
+  UserProfile,
+  UpdateProfileRequest,
+  UpdatePreferencesRequest,
+  ApiResponse,
+} from '../types';
 
 // Create base query with credentials for cookie-based auth
 const baseQuery = fetchBaseQuery({
@@ -19,116 +30,33 @@ export const api = createApi({
   tagTypes: ['Auth', 'UserProfile', 'UserActivity'],
 });
 
-export interface UserProfile {
-  _id: string;
-  name: string;
-  email: string;
-  isVerified: boolean;
-  role: string;
-  preferences: {
-    theme: string;
-    language: string;
-    notifications: boolean;
-  };
-  createdAt: string;
-  updatedAt: string;
-  isProfileComplete: boolean;
-  applicationStatus: string;
-}
-
-export interface Activity {
-  id: string;
-  user: string;
-  action: string;
-  details: string;
-  status: string;
-  severity: string;
-  ipAddress: string;
-  userAgent: string;
-  metadata: {
-    method: string;
-    path: string;
-    statusCode: number;
-    responseTime: number;
-  };
-  location: Record<string, unknown>;
-  deviceInfo: Record<string, unknown>;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  errors: any;
-  meta?: {
-    page?: number;
-    limit?: number;
-    total?: number;
-    pages?: number;
-    [key: string]: any;
-  };
-}
-
-// Types for update requests
-export interface UpdateProfileRequest {
-  name?: string;
-  email?: string;
-  phoneNumber?: string;
-  dateOfBirth?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
-}
-
-export interface UpdatePreferencesRequest {
-  theme?: 'light' | 'dark' | 'system';
-  language?: string;
-  notifications?: {
-    email?: boolean;
-    push?: boolean;
-    sms?: boolean;
-  };
-  timezone?: string;
-  dateFormat?: string;
-}
-
-export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
-}
-
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<{
-      success: boolean;
-      message: string;
-      data: {
-        user: UserProfile;
-      };
-      errors?: any;
-    }, { email: string; password: string }>({
+    // Login user
+    login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
         url: '/auth/login',
         method: 'POST',
         body: credentials,
       })
     }),
-    logout: builder.mutation<{ message: string }, void>({
+
+    // Logout user
+    logout: builder.mutation<LogoutResponse, void>({
       query: () => ({
         url: '/auth/logout',
         method: 'POST',
       }),
     }),
+
+    // Get current user profile
     getProfile: builder.query<ApiResponse<UserProfile>, void>({
       query: () => '/users/me',
       providesTags: (result) => 
         result ? [{ type: 'UserProfile', id: 'CURRENT' }] : [],
     }),
+
+    // Update user profile
     updateProfile: builder.mutation<ApiResponse<UserProfile>, UpdateProfileRequest>({
       query: (profileData) => ({
         url: '/users/me',
@@ -137,6 +65,8 @@ export const authApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'UserProfile', id: 'CURRENT' }],
     }),
+
+    // Update user preferences
     updatePreferences: builder.mutation<ApiResponse<UserProfile>, UpdatePreferencesRequest>({
       query: (preferences) => ({
         url: '/users/me/preferences',
@@ -145,7 +75,9 @@ export const authApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'UserProfile', id: 'CURRENT' }],
     }),
-    changePassword: builder.mutation<ApiResponse<{ success: boolean }>, ChangePasswordRequest>({
+
+    // Change user password
+    changePassword: builder.mutation<ApiResponse<{ success: boolean }>, Omit<ChangePasswordRequest, 'confirmNewPassword'>>({
       query: (passwords) => ({
         url: '/users/me/password',
         method: 'PUT',
@@ -155,13 +87,15 @@ export const authApi = api.injectEndpoints({
         },
       }),
     }),
+
+    // Get recent user activity
     getRecentActivity: builder.query<ApiResponse<Activity[]>, { limit?: number }>({
       query: ({ limit = 1 }) => ({
         url: '/users/me/activity',
         params: { limit },
       }),
       providesTags: (result) => 
-        result?.data?.map(({ id }) => ({ type: 'UserActivity' as const, id })) || [],
+        result?.data?.map(({ _id }) => ({ type: 'UserActivity' as const, id: _id })) || [],
     }),
   }),
   overrideExisting: false,

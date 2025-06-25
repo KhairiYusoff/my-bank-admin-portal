@@ -1,62 +1,75 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TablePagination,
-  CircularProgress, 
+  CircularProgress,
   Alert,
   TableSortLabel,
   Snackbar,
-} from '@mui/material';
-import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
-import { 
+} from "@mui/material";
+import {
+  tableContainerStyles,
+  tableStyles,
+  paperWrapperStyles,
+} from "@/components/shared/TableStyles";
+import {
   useGetPendingApplicationsQuery,
   useApproveApplicationMutation,
   useVerifyCustomerMutation,
-  PendingApplication,
 } from "@/features/admin/store/adminApi";
-import { ApplicationActions } from '@/components/admin/ApplicationActions';
-import StatusChip from '@/components/shared/StatusChip';
+import type { PendingApplication } from "@/features/admin/types/pendingApplications";
+import { ApplicationActions } from "@/features/admin/components/ApplicationActions";
+import StatusChip from "@/components/shared/StatusChip";
 
-type Order = 'asc' | 'desc';
+type Order = "asc" | "desc";
 
 const PendingApplications: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [orderBy, setOrderBy] = useState<keyof PendingApplication>('createdAt');
-  const [order, setOrder] = useState<Order>('desc');
+  const [orderBy, setOrderBy] = useState<keyof PendingApplication>("createdAt");
+  const [order, setOrder] = useState<Order>("desc");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const { data, error: fetchError, isLoading, refetch } = useGetPendingApplicationsQuery({
+  const {
+    data,
+    error: fetchError,
+    isLoading,
+    refetch,
+  } = useGetPendingApplicationsQuery({
     page: page + 1, // Convert to 1-based for API
     limit: rowsPerPage,
     sortBy: orderBy,
-    order
+    order,
   });
 
-  const [approveApplication, { isLoading: isApproving }] = useApproveApplicationMutation();
-  const [verifyCustomer, { isLoading: isVerifying }] = useVerifyCustomerMutation();
+  const [approveApplication, { isLoading: isApproving }] =
+    useApproveApplicationMutation();
+  const [verifyCustomer, { isLoading: isVerifying }] =
+    useVerifyCustomerMutation();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
   const handleRequestSort = (property: keyof PendingApplication) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -67,24 +80,24 @@ const PendingApplications: React.FC = () => {
   const handleApproveApplication = async (userId: string) => {
     try {
       await approveApplication({ userId }).unwrap();
-      setSuccessMessage('Application approved successfully');
+      setSuccessMessage("Application approved successfully");
       refetch();
     } catch (err: any) {
-      const errorMessage = err.data?.message || 'Failed to approve application';
+      const errorMessage = err.data?.message || "Failed to approve application";
       setError(errorMessage);
-      console.error('Approve application error:', errorMessage, err);
+      console.error("Approve application error:", errorMessage, err);
     }
   };
 
   const handleVerifyCustomer = async (userId: string) => {
     try {
       await verifyCustomer({ userId }).unwrap();
-      setSuccessMessage('Customer verified successfully');
+      setSuccessMessage("Customer verified successfully");
       refetch();
     } catch (err: any) {
-      const errorMessage = err.data?.message || 'Failed to verify customer';
+      const errorMessage = err.data?.message || "Failed to verify customer";
       setError(errorMessage);
-      console.error('Verify customer error:', errorMessage, err);
+      console.error("Verify customer error:", errorMessage, err);
     }
   };
 
@@ -96,11 +109,11 @@ const PendingApplications: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: '100%'}}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Pending Applications
-        </Typography>
-      
+    <Box sx={{ width: "100%" }}>
+      <Typography variant="h5" component="h1" gutterBottom>
+        Pending Applications
+      </Typography>
+
       {isLoading ? (
         <Box display="flex" justifyContent="center" p={4}>
           <CircularProgress />
@@ -117,9 +130,9 @@ const PendingApplications: React.FC = () => {
                 <TableRow>
                   <TableCell>
                     <TableSortLabel
-                      active={orderBy === 'name'}
-                      direction={orderBy === 'name' ? order : 'asc'}
-                      onClick={createSortHandler('name')}
+                      active={orderBy === "name"}
+                      direction={orderBy === "name" ? order : "asc"}
+                      onClick={createSortHandler("name")}
                     >
                       Name
                     </TableSortLabel>
@@ -129,9 +142,9 @@ const PendingApplications: React.FC = () => {
                   <TableCell>ID Number</TableCell>
                   <TableCell>
                     <TableSortLabel
-                      active={orderBy === 'createdAt'}
-                      direction={orderBy === 'createdAt' ? order : 'desc'}
-                      onClick={createSortHandler('createdAt')}
+                      active={orderBy === "createdAt"}
+                      direction={orderBy === "createdAt" ? order : "desc"}
+                      onClick={createSortHandler("createdAt")}
                     >
                       Submitted At
                     </TableSortLabel>
@@ -146,8 +159,10 @@ const PendingApplications: React.FC = () => {
                     <TableRow key={application._id} hover>
                       <TableCell>{application.name}</TableCell>
                       <TableCell>{application.email}</TableCell>
-                      <TableCell>{application.phoneNumber || 'N/A'}</TableCell>
-                      <TableCell>{application.identityNumber || 'N/A'}</TableCell>
+                      <TableCell>{application.phoneNumber || "N/A"}</TableCell>
+                      <TableCell>
+                        {application.identityNumber || "N/A"}
+                      </TableCell>
                       <TableCell>
                         {new Date(application.createdAt).toLocaleString()}
                       </TableCell>
@@ -156,9 +171,17 @@ const PendingApplications: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <ApplicationActions
-                          onApprove={() => handleApproveApplication(application._id)}
+                          onApprove={() =>
+                            handleApproveApplication(application._id)
+                          }
                           onVerify={() => handleVerifyCustomer(application._id)}
-                          actionInProgress={isApproving ? 'approve' : isVerifying ? 'verify' : null}
+                          actionInProgress={
+                            isApproving
+                              ? "approve"
+                              : isVerifying
+                              ? "verify"
+                              : null
+                          }
                           disabled={isApproving || isVerifying}
                         />
                       </TableCell>
@@ -176,10 +199,10 @@ const PendingApplications: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          
+
           {data?.meta && data.meta.total > 0 && (
             <TablePagination
-              rowsPerPageOptions={[10, 20, 50]} 
+              rowsPerPageOptions={[10, 20, 50]}
               component="div"
               count={data.meta.total}
               rowsPerPage={rowsPerPage}
@@ -195,9 +218,13 @@ const PendingApplications: React.FC = () => {
         open={!!error}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>
@@ -206,9 +233,13 @@ const PendingApplications: React.FC = () => {
         open={!!successMessage}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           {successMessage}
         </Alert>
       </Snackbar>

@@ -4,7 +4,7 @@ import type {
   AccountsQueryParams,
   AirdropResponse,
   AirdropRequest
-} from '@/features/admin/store/adminApi';
+} from '@/features/accounts/types';
 
 export const accountsApi = api.injectEndpoints({
   endpoints: (builder) => ({
