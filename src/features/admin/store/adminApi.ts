@@ -51,7 +51,7 @@ export const adminApi = api.injectEndpoints({
       { userId: string }
     >({
       query: ({ userId }: { userId: string }) => ({
-        url: `/admin/approve-application/${userId}`,
+        url: `/v2/admin/approve-application/${userId}`,
         method: "POST",
       }),
       invalidatesTags: ["PendingApplications"],
