@@ -1,47 +1,304 @@
+/* Modern login container with animated background */
 .loginContainer {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 40px;
-  background: #fff;
-  border-radius: 12px;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
 }
 
-.loginContainer::before {
-  content: "";
-  position: fixed;
+/* Decorative animated background */
+.decorativeBackground {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-  z-index: -1;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(25, 118, 210, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(25, 118, 210, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(25, 118, 210, 0.1) 0%, transparent 50%);
+  animation: backgroundFloat 20s ease-in-out infinite;
 }
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+}
+
+/* Main login card with glass morphism */
+.loginCard {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  margin-top: 24px;
+  max-width: 420px;
+  margin: 20px;
+  padding: 48px 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: cardSlideUp 0.6s ease-out;
+  transition: all 0.3s ease;
+}
+
+.loginCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Logo and header section */
+.logoSection {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInDown 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logoContainer {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 8px 24px rgba(25, 118, 210, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: logoFloat 3s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.logoContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: logoShine 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+@keyframes logoShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  filter: brightness(0) invert(1);
+  z-index: 1;
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1a237e;
-  margin-bottom: 8px;
-  text-align: center;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #1976d2;
+  margin-bottom: 12px !important;
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(25, 118, 210, 0.1);
 }
 
 .subtitle {
-  font-size: 16px;
-  color: #546e7a;
+  font-size: 16px !important;
+  color: #666 !important;
+  margin-bottom: 0 !important;
+  font-weight: 400 !important;
+  opacity: 0.8;
+}
+
+/* Form styling */
+.form {
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin-bottom: 32px;
-  text-align: center;
+}
+
+.textField {
+  animation: slideInLeft 0.6s ease-out both;
+}
+
+.textField:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Error alert styling */
+.errorAlert {
+  margin-bottom: 24px !important;
+  animation: errorSlideIn 0.4s ease-out;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Login button with advanced styling */
+.loginButton {
+  height: 56px !important;
+  border-radius: 16px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  background: linear-gradient(135deg, #1976d2, #1565c0) !important;
+  box-shadow: 
+    0 8px 24px rgba(25, 118, 210, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease !important;
+  animation: buttonSlideIn 0.6s ease-out 0.5s both;
+}
+
+.loginButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.loginButton:hover::before {
+  left: 100%;
+}
+
+.loginButton:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    0 12px 32px rgba(25, 118, 210, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(135deg, #1e88e5, #1976d2) !important;
+}
+
+.loginButton:active {
+  transform: translateY(0) !important;
+  box-shadow: 
+    0 4px 12px rgba(25, 118, 210, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.loginButton:disabled {
+  background: linear-gradient(135deg, #90caf9, #64b5f6) !important;
+  box-shadow: 
+    0 4px 12px rgba(25, 118, 210, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transform: none !important;
+}
+
+@keyframes buttonSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .loginCard {
+    margin: 16px;
+    padding: 32px 24px;
+    border-radius: 20px;
+  }
+  
+  .logoContainer {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .title {
+    font-size: 28px !important;
+  }
+  
+  .inputGroup {
+    gap: 20px;
+    margin-bottom: 28px;
+  }
 }

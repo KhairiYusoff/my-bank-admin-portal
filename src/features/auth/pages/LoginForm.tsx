@@ -108,144 +108,204 @@ const LoginForm: React.FC = () => {
 
   return (
     <Box className={styles.loginContainer}>
-      <Box sx={{ mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img
-          src="/bank-logo.svg"
-          alt="My Bank Admin"
-          style={{ width: 60, height: 60, marginBottom: 16 }}
-        />
-        <Typography component="h1" variant="h5" sx={{ color: '#1976d2', fontWeight: 500 }}>
-          Welcome Back
-        </Typography>
-      </Box>
-      <Typography className={styles.subtitle}>Sign in to your admin account</Typography>
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Email"
-              type="email"
-              fullWidth
-              margin="normal"
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              disabled={isLoading}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountCircleIcon color={errors.email ? 'error' : 'action'} />
-                  </InputAdornment>
-                ),
-              }}
+      <Box className={styles.decorativeBackground} />
+      <Box className={styles.loginCard}>
+        <Box className={styles.logoSection}>
+          <Box className={styles.logoContainer}>
+            <img
+              src="/bank-logo.svg"
+              alt="My Bank Admin"
+              className={styles.logo}
             />
-          )}
-        />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              fullWidth
-              margin="normal"
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              disabled={isLoading}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon color={errors.password ? 'error' : 'action'} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                      disabled={isLoading}
-                    >
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+          </Box>
+          <Typography component="h1" className={styles.title}>
+            Welcome Back
+          </Typography>
+          <Typography className={styles.subtitle}>Sign in to your admin account</Typography>
+        </Box>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+          <Box className={styles.inputGroup}>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  disabled={isLoading}
+                  className={styles.textField}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircleIcon 
+                          sx={{ 
+                            color: errors.email ? '#d32f2f' : '#1976d2',
+                            fontSize: '1.2rem'
+                          }} 
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                      backdropFilter: 'blur(15px)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(25, 118, 210, 0.2)'
+                      },
+                      '&.Mui-focused': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.3)'
+                      }
+                    }
+                  }}
+                />
+              )}
             />
-          )}
-        />
-        <Collapse in={!!apiError}>
-          <Alert 
-            severity={apiError?.isServerError ? 'warning' : 'error'}
-            sx={{
-              mb: 2,
-              width: '100%',
-              '& .MuiAlert-message': {
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 2
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Password"
+                  type={showPassword ? 'text' : 'password'}
+                  fullWidth
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  disabled={isLoading}
+                  className={styles.textField}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon 
+                          sx={{ 
+                            color: errors.password ? '#d32f2f' : '#1976d2',
+                            fontSize: '1.2rem'
+                          }} 
+                        />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          disabled={isLoading}
+                          sx={{
+                            color: '#1976d2',
+                            '&:hover': {
+                              backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                              transform: 'scale(1.05)'
+                            }
+                          }}
+                        >
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                      backdropFilter: 'blur(15px)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(25, 118, 210, 0.2)'
+                      },
+                      '&.Mui-focused': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.3)'
+                      }
+                    }
+                  }}
+                />
+              )}
+            />
+          </Box>
+          <Collapse in={!!apiError}>
+            <Alert 
+              severity={apiError?.isServerError ? 'warning' : 'error'}
+              className={styles.errorAlert}
+              sx={{
+                borderRadius: '12px',
+                backgroundColor: apiError?.isServerError ? 'rgba(255, 152, 0, 0.08)' : 'rgba(211, 47, 47, 0.08)',
+                backdropFilter: 'blur(15px)',
+                border: `1px solid ${apiError?.isServerError ? 'rgba(255, 152, 0, 0.3)' : 'rgba(211, 47, 47, 0.3)'}`,
+                '& .MuiAlert-message': {
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 2
+                }
+              }}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => setApiError(null)}
+                  sx={{
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)'
+                    }
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
               }
-            }}
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => setApiError(null)}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
+            >
+              <Box>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  {apiError?.isServerError ? 'Connection Error' : 'Login Failed'}
+                </Typography>
+                <Typography variant="body2">
+                  {apiError?.message}
+                </Typography>
+              </Box>
+              {apiError?.isServerError && (
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  color="inherit"
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={isLoading}
+                  sx={{ 
+                    whiteSpace: 'nowrap',
+                    borderRadius: '8px'
+                  }}
+                >
+                  Retry
+                </Button>
+              )}
+            </Alert>
+          </Collapse>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={isLoading}
+            className={styles.loginButton}
+            startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            <Box>
-              <Typography variant="subtitle2" fontWeight={600}>
-                {apiError?.isServerError ? 'Connection Error' : 'Login Failed'}
-              </Typography>
-              <Typography variant="body2">
-                {apiError?.message}
-              </Typography>
-            </Box>
-            {apiError?.isServerError && (
-              <Button 
-                variant="outlined" 
-                size="small" 
-                color="inherit"
-                onClick={handleSubmit(onSubmit)}
-                disabled={isLoading}
-                sx={{ whiteSpace: 'nowrap' }}
-              >
-                Retry
-              </Button>
-            )}
-          </Alert>
-        </Collapse>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          disabled={isLoading}
-          sx={{
-            mt: 3,
-            mb: 2,
-            py: 1.5,
-            fontSize: '1rem',
-            fontWeight: 500,
-            backgroundColor: '#1976d2',
-            '&:hover': {
-              backgroundColor: '#115293'
-            }
-          }}
-          startIcon={isLoading ? <CircularProgress size={20} /> : null}
-        >
-          {isLoading ? 'Logging in...' : 'Login'}
-        </Button>
-      </form>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+      </Box>
     </Box>
   );
 };
