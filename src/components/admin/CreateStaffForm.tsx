@@ -15,7 +15,6 @@ import {
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { CreateStaffRequest } from '@/features/admin/store/adminApi';
 
 const staffSchema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -31,12 +30,16 @@ const staffSchema = yup.object().shape({
   role: yup.string().oneOf(['admin', 'banker']).required('Role is required'),
 });
 
-interface CreateStaffFormData extends Omit<CreateStaffRequest, 'confirmPassword'> {
+interface CreateStaffFormData {
+  name: string;
+  email: string;
+  password: string;
   confirmPassword: string;
+  role: 'admin' | 'banker';
 }
 
 export interface CreateStaffFormProps {
-  onSubmit: (data: Omit<CreateStaffRequest, 'confirmPassword'>) => void;
+  onSubmit: (data: Omit<CreateStaffFormData, 'confirmPassword'>) => void;
   loading?: boolean;
   error?: string;
   onCancel?: () => void;
