@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { useLoginMutation } from '@/features/auth/store/authApi';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { setCredentials } from '@/features/auth/store/authSlice';
-import styles from '@/features/auth/LoginForm.module.css';
+import styles from '@/features/auth/pages/LoginForm.module.css';
 import { 
   Alert, 
   Box, 
