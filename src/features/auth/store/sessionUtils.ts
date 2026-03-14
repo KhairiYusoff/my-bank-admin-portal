@@ -1,4 +1,4 @@
-import { api } from '@/features/api/apiSlice';
+import { api } from '@/app/store/apiSlice';
 
 // Time in milliseconds
 export const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
