@@ -6,7 +6,8 @@ export interface PendingApplication {
   email: string;
   phoneNumber?: string;
   identityNumber?: string;
-  applicationStatus: string;
+  applicationStatus: "pending" | "approved" | "completed";
+  isProfileComplete: boolean;
   createdAt: string;
   updatedAt?: string;
 }

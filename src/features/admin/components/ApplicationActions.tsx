@@ -1,24 +1,15 @@
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { 
-  Button, 
-  Menu, 
-  MenuItem, 
-  ListItemIcon, 
-  ListItemText, 
-  Typography,
-  Tooltip,
-  Box,
-  CircularProgress
-} from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import {
   CheckCircle as ApproveIcon,
   Verified as VerifyIcon,
-  MoreVert as MoreIcon,
 } from '@mui/icons-material';
 import { ConfirmationDialog } from '@/components/shared/ConfirmationDialog';
 
 interface ActionButtonProps {
+  applicationStatus: "pending" | "approved" | "completed";
+  isProfileComplete: boolean;
   onApprove: () => Promise<void>;
   onVerify: () => Promise<void>;
   loading?: boolean;
@@ -27,33 +18,21 @@ interface ActionButtonProps {
 }
 
 export const ApplicationActions: React.FC<ActionButtonProps> = ({
+  applicationStatus,
+  isProfileComplete,
   onApprove,
   onVerify,
   loading = false,
   disabled = false,
   actionInProgress = null,
 }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [actionType, setActionType] = useState<'approve' | 'verify' | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    if (!loading && !disabled) {
-      setAnchorEl(event.currentTarget);
-    }
-  };
-
-  const handleMenuClose = () => {
-    if (!isSubmitting) {
-      setAnchorEl(null);
-    }
-  };
-
   const handleActionClick = (type: 'approve' | 'verify') => {
     setActionType(type);
     setIsConfirmOpen(true);
-    handleMenuClose();
   };
 
   const handleConfirm = async () => {
@@ -84,89 +63,41 @@ export const ApplicationActions: React.FC<ActionButtonProps> = ({
     }
   };
 
+  if (applicationStatus === 'completed') {
+    return (
+      <Box>
+        <Chip label="Verified" color="success" size="small" icon={<VerifyIcon />} />
+      </Box>
+    );
+  }
+
+  if (applicationStatus === 'approved' && !isProfileComplete) {
+    return (
+      <Box>
+        <Chip label="Awaiting Profile" color="warning" size="small" />
+      </Box>
+    );
+  }
+
+  const isApprove = applicationStatus === 'pending';
   const isActionDisabled = disabled || loading || isSubmitting;
-  const isApproveInProgress = actionInProgress === 'approve' || (isSubmitting && actionType === 'approve');
-  const isVerifyInProgress = actionInProgress === 'verify' || (isSubmitting && actionType === 'verify');
+  const isActionInProgress = isApprove
+    ? actionInProgress === 'approve'
+    : actionInProgress === 'verify';
 
   return (
-    <Box sx={{ position: 'relative' }}>
-      <Tooltip title={disabled ? 'No actions available' : ''}>
-        <span>
-          <Button
-            aria-label="application actions"
-            aria-controls="application-actions-menu"
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-            disabled={isActionDisabled}
-            endIcon={<MoreIcon />}
-            variant="outlined"
-            size="small"
-            sx={{
-              minWidth: '100px',
-              opacity: isActionDisabled ? 0.7 : 1,
-            }}
-          >
-            {isApproveInProgress || isVerifyInProgress ? 'Processing...' : 'Actions'}
-          </Button>
-        </span>
-      </Tooltip>
-
-      <Menu
-        id="application-actions-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl) && !isSubmitting}
-        onClose={handleMenuClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
+    <Box>
+      <LoadingButton
+        size="small"
+        variant="contained"
+        color={isApprove ? 'success' : 'primary'}
+        loading={isSubmitting || isActionInProgress}
+        disabled={isActionDisabled}
+        onClick={() => handleActionClick(isApprove ? 'approve' : 'verify')}
+        startIcon={isApprove ? <ApproveIcon /> : <VerifyIcon />}
       >
-        <MenuItem 
-          onClick={() => handleActionClick('approve')} 
-          disabled={isApproveInProgress}
-        >
-          <ListItemIcon>
-            <ApproveIcon fontSize="small" color={isApproveInProgress ? 'primary' : 'inherit'} />
-          </ListItemIcon>
-          <ListItemText 
-            primary={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <span>Approve Application</span>
-                {isApproveInProgress && (
-                  <Box component="span" sx={{ ml: 1 }}>
-                    <CircularProgress size={16} color="primary" />
-                  </Box>
-                )}
-              </Box>
-            }
-          />
-        </MenuItem>
-        <MenuItem 
-          onClick={() => handleActionClick('verify')} 
-          disabled={isVerifyInProgress}
-        >
-          <ListItemIcon>
-            <VerifyIcon fontSize="small" color={isVerifyInProgress ? 'primary' : 'inherit'} />
-          </ListItemIcon>
-          <ListItemText 
-            primary={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <span>Verify Customer</span>
-                {isVerifyInProgress && (
-                  <Box component="span" sx={{ ml: 1 }}>
-                    <CircularProgress size={16} color="primary" />
-                  </Box>
-                )}
-              </Box>
-            }
-          />
-        </MenuItem>
-      </Menu>
+        {isApprove ? 'Approve' : 'Verify'}
+      </LoadingButton>
 
       <ConfirmationDialog
         open={isConfirmOpen}

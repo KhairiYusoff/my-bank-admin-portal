@@ -162,6 +162,8 @@ const PendingApplications: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <ApplicationActions
+                          applicationStatus={application.applicationStatus}
+                          isProfileComplete={application.isProfileComplete}
                           onApprove={() =>
                             handleApproveApplication(application._id)
                           }
