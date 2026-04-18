@@ -27,6 +27,7 @@ import {
 } from "@/features/admin/store/adminApi";
 import type { PendingApplication } from "@/features/admin/types/pendingApplications";
 import { ApplicationActions } from "@/features/admin/components/ApplicationActions";
+import ProfileLinkDialog from "@/features/admin/components/ProfileLinkDialog";
 
 type Order = "asc" | "desc";
 
@@ -37,6 +38,7 @@ const PendingApplications: React.FC = () => {
   const [order, setOrder] = useState<Order>("desc");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [profileLink, setProfileLink] = useState<string | null>(null);
 
   const {
     data,
@@ -78,8 +80,11 @@ const PendingApplications: React.FC = () => {
 
   const handleApproveApplication = async (userId: string) => {
     try {
-      await approveApplication({ userId }).unwrap();
+      const result = await approveApplication({ userId }).unwrap();
       setSuccessMessage("Application approved successfully");
+      if (result.completeProfileUrl) {
+        setProfileLink(result.completeProfileUrl);
+      }
       refetch();
     } catch (err: any) {
       const errorMessage = err.data?.message || "Failed to approve application";
@@ -236,6 +241,12 @@ const PendingApplications: React.FC = () => {
           {successMessage}
         </Alert>
       </Snackbar>
+
+      <ProfileLinkDialog
+        open={!!profileLink}
+        url={profileLink ?? ""}
+        onClose={() => setProfileLink(null)}
+      />
     </Box>
   );
 };

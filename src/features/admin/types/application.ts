@@ -6,6 +6,7 @@ export interface ApplicationActionResponse extends BaseResponse {
     status: string;
     updatedAt: string;
   };
+  completeProfileUrl?: string;
 }
 
 export interface ApplicationStatusUpdate {
