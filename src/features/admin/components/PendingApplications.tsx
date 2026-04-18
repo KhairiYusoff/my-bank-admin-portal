@@ -27,7 +27,6 @@ import {
 } from "@/features/admin/store/adminApi";
 import type { PendingApplication } from "@/features/admin/types/pendingApplications";
 import { ApplicationActions } from "@/features/admin/components/ApplicationActions";
-import StatusChip from "@/components/shared/StatusChip";
 
 type Order = "asc" | "desc";
 
@@ -139,7 +138,6 @@ const PendingApplications: React.FC = () => {
                   </TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Phone</TableCell>
-                  <TableCell>ID Number</TableCell>
                   <TableCell>
                     <TableSortLabel
                       active={orderBy === "createdAt"}
@@ -149,7 +147,6 @@ const PendingApplications: React.FC = () => {
                       Submitted At
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell>Status</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -161,13 +158,7 @@ const PendingApplications: React.FC = () => {
                       <TableCell>{application.email}</TableCell>
                       <TableCell>{application.phoneNumber || "N/A"}</TableCell>
                       <TableCell>
-                        {application.identityNumber || "N/A"}
-                      </TableCell>
-                      <TableCell>
                         {new Date(application.createdAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <StatusChip status={application.applicationStatus} />
                       </TableCell>
                       <TableCell>
                         <ApplicationActions
@@ -189,7 +180,7 @@ const PendingApplications: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                    <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
                       <Typography variant="body1" color="textSecondary">
                         No pending applications found
                       </Typography>
