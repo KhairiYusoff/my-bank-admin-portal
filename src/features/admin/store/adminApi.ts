@@ -33,7 +33,7 @@ export const adminApi = api.injectEndpoints({
       PendingApplicationsQueryParams
     >({
       query: (params) => ({
-        url: "/admin/pending-applications",
+        url: "/v2/onboarding/pending",
         method: "GET",
         params: {
           page: params.page,
@@ -51,7 +51,7 @@ export const adminApi = api.injectEndpoints({
       { userId: string }
     >({
       query: ({ userId }: { userId: string }) => ({
-        url: `/v2/admin/approve-application/${userId}`,
+        url: `/v2/onboarding/approve/${userId}`,
         method: "POST",
       }),
       invalidatesTags: ["PendingApplications"],
@@ -63,7 +63,7 @@ export const adminApi = api.injectEndpoints({
       { userId: string }
     >({
       query: ({ userId }: { userId: string }) => ({
-        url: `/v2/admin/verify-customer/${userId}`,
+        url: `/v2/onboarding/verify/${userId}`,
         method: "POST",
       }),
       invalidatesTags: ["PendingApplications"],
