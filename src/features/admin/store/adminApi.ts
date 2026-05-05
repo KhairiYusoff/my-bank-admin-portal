@@ -18,7 +18,7 @@ export const adminApi = api.injectEndpoints({
     // Activity Log
     getUserActivity: builder.query<ActivityLogResponse, ActivityLogParams>({
       query: ({ userId, ...params }) => ({
-        url: `/users/activity/${userId}`,
+        url: `/audit/user/${userId}`,
         method: "GET",
         params,
       }),

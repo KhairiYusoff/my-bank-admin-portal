@@ -91,7 +91,7 @@ export const authApi = api.injectEndpoints({
     // Get recent user activity
     getRecentActivity: builder.query<ApiResponse<Activity[]>, { limit?: number }>({
       query: ({ limit = 1 }) => ({
-        url: '/users/me/activity',
+        url: '/audit/me',
         params: { limit },
       }),
       providesTags: (result) => 
