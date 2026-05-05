@@ -19,6 +19,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AirIcon from '@mui/icons-material/Air';
@@ -34,6 +35,7 @@ const navItems: { label: string; path: string; icon: JSX.Element }[] = [
   { label: 'Staff Management', path: '/staff', icon: <PersonAddIcon /> },
   { label: 'Account Management', path: '/accounts', icon: <AccountBalanceIcon /> },
   { label: 'Applications', path: '/pending-applications', icon: <PendingActionsIcon /> },
+  { label: 'System Audit Logs', path: '/audit', icon: <AssessmentIcon /> },
   { label: 'Transaction History', path: '/transactions', icon: <SwapHorizIcon /> },
   { label: 'Airdrop Management', path: '/airdrop', icon: <AirIcon /> },
 ];

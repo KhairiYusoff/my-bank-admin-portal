@@ -4,10 +4,12 @@ import {
   CircularProgress, Alert, TablePagination, Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useGetUserActivityQuery } from '@/features/admin/store/adminApi';
-import type { Activity } from '@/features/admin/types/activity';
+import { useGetUserAuditLogsQuery } from '@/features/audit';
+import type { Audit } from '@/features/audit/types';
 import EmptyState from '@/components/shared/EmptyState';
 import HistoryEduOutlinedIcon from '@mui/icons-material/HistoryEduOutlined';
+import StatusChip from '@/components/shared/StatusChip';
+import { StyledTableCell, StyledTableRow } from '@/components/shared/TableStyles';
 
 interface UserActivityModalProps {
   open: boolean;
@@ -20,17 +22,18 @@ const UserActivityModal: React.FC<UserActivityModalProps> = ({ open, onClose, us
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const {
-    data: activityResponse,
+    data: auditResponse,
     error,
     isLoading,
-  } = useGetUserActivityQuery({
+    isFetching,
+  } = useGetUserAuditLogsQuery({
     userId: userId!,
     page: page + 1,
     limit: rowsPerPage,
   }, { skip: !userId || !open });
 
-  const activities = activityResponse?.data;
-  const meta = activityResponse?.meta;
+  const activities = auditResponse?.data;
+  const meta = auditResponse?.meta;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -49,6 +52,15 @@ const UserActivityModal: React.FC<UserActivityModalProps> = ({ open, onClose, us
     }
   }, [open]);
 
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'CRITICAL': return 'error';
+      case 'HIGH': return 'warning';
+      case 'MEDIUM': return 'info';
+      default: return 'default';
+    }
+  };
+
   const renderContent = () => {
     if (isLoading) return <Box display="flex" justifyContent="center" p={5}><CircularProgress /></Box>;
     if (error) return <Alert severity="error">Failed to load user activity.</Alert>;
@@ -61,28 +73,50 @@ const UserActivityModal: React.FC<UserActivityModalProps> = ({ open, onClose, us
     );
 
     return (
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', position: 'relative' }}>
+        {isFetching && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              zIndex: 1,
+            }}
+          >
+            <CircularProgress size={24} />
+          </Box>
+        )}
         <TableContainer sx={{ maxHeight: '60vh' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Action</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Severity</TableCell>
-                <TableCell>IP Address</TableCell>
+                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>Action</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>Severity</StyledTableCell>
+                <StyledTableCell>IP Address</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {activities.map((activity: Activity, idx: number) => (
-  <TableRow key={activity._id || idx}>
-    <TableCell>{new Date(activity.createdAt).toLocaleString()}</TableCell>
-    <TableCell>{activity.action}</TableCell>
-    <TableCell>{activity.status}</TableCell>
-    <TableCell>{activity.severity}</TableCell>
-    <TableCell>{activity.ipAddress}</TableCell>
-  </TableRow>
-))}
+              {activities.map((activity: Audit) => (
+                <StyledTableRow key={activity._id}>
+                  <TableCell>{new Date(activity.createdAt).toLocaleString()}</TableCell>
+                  <TableCell>{activity.action.replace(/_/g, ' ')}</TableCell>
+                  <TableCell>
+                    <StatusChip status={activity.status} />
+                  </TableCell>
+                  <TableCell>
+                    <StatusChip status={activity.severity} color={getSeverityColor(activity.severity)} />
+                  </TableCell>
+                  <TableCell>{activity.ipAddress}</TableCell>
+                </StyledTableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

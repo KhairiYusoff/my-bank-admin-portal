@@ -9,6 +9,7 @@ const UsersList = lazy(() => import("@/features/users/pages/UsersList"));
 const PendingApplications = lazy(
   () => import("@/features/admin/components/PendingApplications")
 );
+const AuditLogPage = lazy(() => import("@/features/audit/pages/AuditLogPage"));
 const TransactionsList = lazy(
   () => import("@/features/transactions/pages/TransactionsList")
 );
@@ -41,6 +42,7 @@ export const routes: AppRoute[] = [
   createRoute("/dashboard", <Dashboard />),
   createRoute("/users", <UsersList />),
   createRoute("/pending-applications", <PendingApplications />),
+  createRoute("/audit", <AuditLogPage />),
   createRoute("/transactions", <TransactionsList />),
   createRoute("/accounts", <AccountsList />),
   createRoute("/airdrop", <Airdrop />),

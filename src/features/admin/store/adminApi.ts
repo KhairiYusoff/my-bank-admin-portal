@@ -1,11 +1,7 @@
 import { api } from "@/app/store/apiSlice";
-import type { EndpointBuilder } from "@reduxjs/toolkit/query";
 
 // Import types from their respective feature modules
-import type { BaseResponse } from "@/features/users/types";
 import type {
-  ActivityLogResponse,
-  ActivityLogParams,
   PendingApplicationsResponse,
   PendingApplicationsQueryParams,
   ApplicationActionResponse,
@@ -15,18 +11,6 @@ import type {
 export const adminApi = api.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    // Activity Log
-    getUserActivity: builder.query<ActivityLogResponse, ActivityLogParams>({
-      query: ({ userId, ...params }) => ({
-        url: `/audit/user/${userId}`,
-        method: "GET",
-        params,
-      }),
-      providesTags: (result, error, { userId }) => [
-        { type: "UserActivity", id: userId },
-      ],
-    }),
-
     // Pending Applications
     getPendingApplications: builder.query<
       PendingApplicationsResponse,
@@ -73,7 +57,6 @@ export const adminApi = api.injectEndpoints({
 
 // Export hooks for usage in functional components
 export const {
-  useGetUserActivityQuery,
   useGetPendingApplicationsQuery,
   useApproveApplicationMutation,
   useVerifyCustomerMutation,

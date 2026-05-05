@@ -12,24 +12,22 @@ import {
   CircularProgress,
   Chip,
   Avatar,
-  Grid,
   Skeleton
 } from '@mui/material';
 import { 
-  Person as PersonIcon, 
   Email as EmailIcon, 
   VerifiedUser as VerifiedUserIcon,
   Event as EventIcon,
   History as HistoryIcon,
-  Info as InfoIcon
 } from '@mui/icons-material';
 import { 
   useGetProfileQuery, 
-  useGetRecentActivityQuery, 
-  Activity
 } from '@/features/auth/store/authApi';
+import { 
+  useGetOwnAuditLogsQuery,
+  Audit
+} from '@/features/audit';
 
-// The Activity interface is now imported directly from the authApi and includes all necessary fields.
 import { format } from 'date-fns';
 
 
@@ -38,23 +36,23 @@ const Profile: React.FC = () => {
     data: profileData, 
     isLoading: isLoadingProfile, 
     error: profileError, 
-    refetch: refetchProfile 
   } = useGetProfileQuery();
   
   const { 
     data: activityData, 
     isLoading: isLoadingActivity, 
     error: activityError 
-  } = useGetRecentActivityQuery({ limit: 5 });
+  } = useGetOwnAuditLogsQuery({ limit: 5 });
   
 
   const profile = profileData?.data;
-  const activities: Activity[] = activityData?.data || [];
+  const activities: Audit[] = activityData?.data || [];
 
 
 
-  const getActivityIcon = (activity: Activity) => {
+  const getActivityIcon = (activity: Audit) => {
     switch (activity.severity) {
+      case 'CRITICAL':
       case 'HIGH':
         return <HistoryIcon color="error" />;
       case 'MEDIUM':
@@ -197,7 +195,7 @@ const Profile: React.FC = () => {
             ) : (
               <List>
                 {activities.map((activity, index) => (
-                  <React.Fragment key={activity.id || index}>
+                  <React.Fragment key={activity._id || index}>
                     <ListItem>
                       <ListItemIcon>
                         {getActivityIcon(activity)}

@@ -1,6 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '@/app/store';
-import type { Activity } from '@/features/admin/types/activity';
 import type {
   LoginRequest,
   LoginResponse,
@@ -87,16 +85,6 @@ export const authApi = api.injectEndpoints({
         },
       }),
     }),
-
-    // Get recent user activity
-    getRecentActivity: builder.query<ApiResponse<Activity[]>, { limit?: number }>({
-      query: ({ limit = 1 }) => ({
-        url: '/audit/me',
-        params: { limit },
-      }),
-      providesTags: (result) => 
-        result?.data?.map(({ _id }) => ({ type: 'UserActivity' as const, id: _id })) || [],
-    }),
   }),
   overrideExisting: false,
 });
@@ -108,5 +96,4 @@ export const {
   useUpdateProfileMutation,
   useUpdatePreferencesMutation,
   useChangePasswordMutation,
-  useGetRecentActivityQuery,
 } = authApi;
