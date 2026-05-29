@@ -3,6 +3,9 @@ import type {
   StaffListResponse,
   CreateStaffRequest,
   CreateStaffResponse,
+  UpdateStaffRequest,
+  UpdateStaffResponse,
+  DeleteStaffResponse,
 } from "@/features/staff/types";
 
 export const staffApi = api.injectEndpoints({
@@ -26,9 +29,31 @@ export const staffApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Staff"],
     }),
-    // Future endpoints (updateStaff, deleteStaff, etc.) can be added here
+    updateStaff: builder.mutation<
+      UpdateStaffResponse,
+      { staffId: string; body: UpdateStaffRequest }
+    >({
+      query: ({ staffId, body }) => ({
+        url: `/admin/staff/${staffId}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Staff"],
+    }),
+    deleteStaff: builder.mutation<DeleteStaffResponse, string>({
+      query: (staffId: string) => ({
+        url: `/admin/staff/${staffId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Staff"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetStaffMembersQuery, useCreateStaffMutation } = staffApi;
+export const {
+  useGetStaffMembersQuery,
+  useCreateStaffMutation,
+  useUpdateStaffMutation,
+  useDeleteStaffMutation,
+} = staffApi;

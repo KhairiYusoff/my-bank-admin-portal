@@ -1,6 +1,6 @@
-import { BaseResponse } from '@/features/users/types';
+import { BaseResponse } from "@/features/users/types";
 
-export type StaffRole = 'admin' | 'banker';
+export type StaffRole = "admin" | "banker";
 
 export interface StaffMember {
   _id: string;
@@ -37,10 +37,23 @@ export interface CreateStaffResponse extends BaseResponse {
   data: StaffMember;
 }
 
+export type StaffStatus = "active" | "suspended" | "terminated";
+
+export interface UpdateStaffRequest {
+  role?: StaffRole;
+  status?: StaffStatus;
+}
+
+export interface UpdateStaffResponse extends BaseResponse {
+  data: StaffMember;
+}
+
+export interface DeleteStaffResponse extends BaseResponse {}
+
 export interface StaffQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   status?: string;
   role?: StaffRole;
 }
