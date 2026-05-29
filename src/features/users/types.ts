@@ -60,10 +60,22 @@ export interface UsersResponse extends BaseResponse {
   meta: UsersMeta;
 }
 
+export type UserStatus = "active" | "suspended" | "terminated";
+
+export interface UpdateCustomerRequest {
+  status: UserStatus;
+}
+
+export interface UpdateCustomerResponse extends BaseResponse {
+  data: User;
+}
+
+export interface DeleteCustomerResponse extends BaseResponse {}
+
 export interface UsersQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   search?: string;
   status?: string;
   role?: string;

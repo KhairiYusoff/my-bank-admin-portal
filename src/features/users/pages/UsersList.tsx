@@ -1,6 +1,10 @@
 import React from "react";
 
-import { useGetAllCustomersQuery } from "@/features/users/store/usersApi";
+import {
+  useGetAllCustomersQuery,
+  useUpdateCustomerMutation,
+  useDeleteCustomerMutation,
+} from "@/features/users/store/usersApi";
 import type { User } from "@/features/users/types";
 import {
   Box,
@@ -16,6 +20,10 @@ import {
   Alert,
   TablePagination,
   Button,
+  IconButton,
+  Tooltip,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   tableContainerStyles,
@@ -23,15 +31,22 @@ import {
   paperWrapperStyles,
 } from "@/components/shared/TableStyles";
 import UserActivityModal from "@/features/admin/components/UserActivityModal";
+import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 import StatusChip from "@/components/shared/StatusChip";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const UsersList: React.FC = () => {
   const [isActivityModalOpen, setActivityModalOpen] = React.useState(false);
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
-    null
+    null,
   );
+  const [deleteTarget, setDeleteTarget] = React.useState<User | null>(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [updateCustomer] = useUpdateCustomerMutation();
+  const [deleteCustomer, { isLoading: isDeleting }] =
+    useDeleteCustomerMutation();
   const handleOpenActivityModal = (userId: string) => {
     setSelectedUserId(userId);
     setActivityModalOpen(true);
@@ -40,6 +55,19 @@ const UsersList: React.FC = () => {
   const handleCloseActivityModal = () => {
     setActivityModalOpen(false);
     setSelectedUserId(null);
+  };
+
+  const handleStatusChange = async (user: User, status: string) => {
+    await updateCustomer({
+      customerId: user._id,
+      body: { status: status as any },
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    await deleteCustomer(deleteTarget._id);
+    setDeleteTarget(null);
   };
 
   const { data, error, isLoading } = useGetAllCustomersQuery({
@@ -53,7 +81,7 @@ const UsersList: React.FC = () => {
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -105,13 +133,38 @@ const UsersList: React.FC = () => {
                         : "N/A"}
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleOpenActivityModal(user._id)}
+                      <Box
+                        sx={{ display: "flex", gap: 1, alignItems: "center" }}
                       >
-                        View Activity
-                      </Button>
+                        <Select
+                          size="small"
+                          value={user.applicationStatus || "active"}
+                          onChange={(e) =>
+                            handleStatusChange(user, e.target.value)
+                          }
+                          sx={{ fontSize: "0.75rem", minWidth: 100 }}
+                        >
+                          <MenuItem value="active">active</MenuItem>
+                          <MenuItem value="suspended">suspended</MenuItem>
+                          <MenuItem value="terminated">terminated</MenuItem>
+                        </Select>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => handleOpenActivityModal(user._id)}
+                        >
+                          Activity
+                        </Button>
+                        <Tooltip title="Delete customer">
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setDeleteTarget(user)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -144,6 +197,16 @@ const UsersList: React.FC = () => {
         open={isActivityModalOpen}
         onClose={handleCloseActivityModal}
         userId={selectedUserId}
+      />
+      <ConfirmationDialog
+        open={!!deleteTarget}
+        title="Delete Customer"
+        message={`Are you sure you want to delete ${deleteTarget?.name}? This cannot be undone.`}
+        confirmText="Delete"
+        severity="error"
+        loading={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onClose={() => setDeleteTarget(null)}
       />
     </Box>
   );
