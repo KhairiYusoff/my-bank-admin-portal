@@ -1,4 +1,4 @@
-import { BaseResponse } from '@/features/users/types';
+import { BaseResponse } from "@/features/users/types";
 
 export interface TransactionAccount {
   _id: string;
@@ -36,10 +36,14 @@ export interface TransactionsResponse extends BaseResponse {
   };
 }
 
+export interface TransactionDetailResponse extends BaseResponse {
+  data: Transaction;
+}
+
 export interface TransactionsQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   status?: string;
   type?: string;
   startDate?: string;

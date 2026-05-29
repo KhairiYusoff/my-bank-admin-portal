@@ -2,6 +2,7 @@ import { api } from "@/app/store/apiSlice";
 import type {
   TransactionsResponse,
   TransactionsQueryParams,
+  TransactionDetailResponse,
 } from "@/features/transactions/types";
 
 export const transactionsApi = api.injectEndpoints({
@@ -23,8 +24,15 @@ export const transactionsApi = api.injectEndpoints({
       }),
       providesTags: ["Transactions"],
     }),
+    getTransactionDetails: builder.query<TransactionDetailResponse, string>({
+      query: (transactionId: string) => ({
+        url: `/transactions/${transactionId}`,
+        method: "GET",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetAllTransactionsQuery } = transactionsApi;
+export const { useGetAllTransactionsQuery, useGetTransactionDetailsQuery } =
+  transactionsApi;

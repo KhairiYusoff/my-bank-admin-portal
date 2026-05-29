@@ -1,59 +1,73 @@
-import React from 'react';
-import { useGetAllTransactionsQuery } from '@/features/transactions/store/transactionsApi';
-import type { Transaction } from "@/features/admin/store/adminApi";
-import { 
-  Box, 
-  Typography, 
+import React from "react";
+import { useGetAllTransactionsQuery } from "@/features/transactions/store/transactionsApi";
+import type { Transaction } from "@/features/transactions/types";
+import {
+  Box,
+  Typography,
   Paper,
-  Table, 
-  TableHead, 
-  TableRow, 
-  TableCell, 
-  TableBody, 
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
   TableContainer,
-  CircularProgress, 
+  CircularProgress,
   Alert,
   Chip,
   TablePagination,
   IconButton,
-  Tooltip
-} from '@mui/material';
-import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
-import { formatCurrency, formatDateTime } from '@/utils/formatters';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import StatusChip from '@/components/shared/StatusChip';
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Divider,
+} from "@mui/material";
+import {
+  tableContainerStyles,
+  tableStyles,
+  paperWrapperStyles,
+} from "@/components/shared/TableStyles";
+import { formatCurrency, formatDateTime } from "@/utils/formatters";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import StatusChip from "@/components/shared/StatusChip";
 
 const TransactionsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10); 
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selectedTransaction, setSelectedTransaction] =
+    React.useState<Transaction | null>(null);
+
   const { data, error, isLoading } = useGetAllTransactionsQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
-    sort: 'desc'
+    sort: "desc",
   });
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-
   const getTypeColor = (type: string) => {
-    if (!type) return 'default';
+    if (!type) return "default";
     switch (type.toLowerCase()) {
-      case 'transfer':
-        return 'primary';
-      case 'deposit':
-      case 'airdrop':
-        return 'success';
-      case 'withdrawal':
-        return 'warning';
+      case "transfer":
+        return "primary";
+      case "deposit":
+      case "airdrop":
+        return "success";
+      case "withdrawal":
+        return "warning";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -74,11 +88,11 @@ const TransactionsList: React.FC = () => {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: "100%" }}>
       <Typography variant="h5" component="h1" gutterBottom>
         Transactions
       </Typography>
-      
+
       <Paper sx={paperWrapperStyles}>
         <TableContainer sx={tableContainerStyles}>
           <Table sx={tableStyles}>
@@ -97,25 +111,26 @@ const TransactionsList: React.FC = () => {
                 <TableRow key={transaction._id} hover>
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">
-                      {transaction.account?.accountNumber || 'N/A'}
+                      {transaction.account?.accountNumber || "N/A"}
                     </Typography>
                     <Typography variant="caption" color="textSecondary">
                       {transaction.description}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={transaction.type || 'UNKNOWN'} 
-                      color={getTypeColor(transaction.type) as any} 
-                      size="small" 
+                    <Chip
+                      label={transaction.type || "UNKNOWN"}
+                      color={getTypeColor(transaction.type) as any}
+                      size="small"
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography 
-                      color={transaction.amount < 0 ? 'error' : 'success'}
+                    <Typography
+                      color={transaction.amount < 0 ? "error" : "success"}
                       fontWeight="medium"
                     >
-                      {transaction.amount < 0 ? '' : '+'}{formatCurrency(transaction.amount)}
+                      {transaction.amount < 0 ? "" : "+"}
+                      {formatCurrency(transaction.amount)}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -127,13 +142,16 @@ const TransactionsList: React.FC = () => {
                         {formatDateTime(transaction.date)}
                       </Typography>
                       <Typography variant="caption" color="textSecondary">
-                        by {transaction.performedBy?.name || 'System'}
+                        by {transaction.performedBy?.name || "System"}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Tooltip title="View Details">
-                      <IconButton size="small">
+                      <IconButton
+                        size="small"
+                        onClick={() => setSelectedTransaction(transaction)}
+                      >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
@@ -143,10 +161,10 @@ const TransactionsList: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         {data && (
           <TablePagination
-            rowsPerPageOptions={[10, 20, 50]} 
+            rowsPerPageOptions={[10, 20, 50]}
             component="div"
             count={data.meta.total}
             rowsPerPage={rowsPerPage}
@@ -156,6 +174,82 @@ const TransactionsList: React.FC = () => {
           />
         )}
       </Paper>
+
+      <Dialog
+        open={!!selectedTransaction}
+        onClose={() => setSelectedTransaction(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Transaction Details</DialogTitle>
+        <DialogContent dividers>
+          {selectedTransaction && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Account
+                </Typography>
+                <Typography>
+                  {selectedTransaction.account?.accountNumber || "N/A"}
+                </Typography>
+              </Box>
+              <Divider />
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Description
+                </Typography>
+                <Typography>
+                  {selectedTransaction.description || "—"}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Box flex={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    Type
+                  </Typography>
+                  <Typography>{selectedTransaction.type}</Typography>
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    Amount
+                  </Typography>
+                  <Typography fontWeight="medium">
+                    {formatCurrency(selectedTransaction.amount)}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Box flex={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    Status
+                  </Typography>
+                  <StatusChip status={selectedTransaction.status} />
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    Date
+                  </Typography>
+                  <Typography>
+                    {formatDateTime(selectedTransaction.date)}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Performed By
+                </Typography>
+                <Typography>
+                  {selectedTransaction.performedBy?.name || "System"} (
+                  {selectedTransaction.performedBy?.role || "—"})
+                </Typography>
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSelectedTransaction(null)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
