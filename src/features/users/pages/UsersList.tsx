@@ -114,12 +114,11 @@ const UsersList: React.FC = () => {
                 <TableRow>
                   <TableCell width="18%">Name</TableCell>
                   <TableCell width="22%">Email</TableCell>
-                  <TableCell width="8%">Role</TableCell>
                   <TableCell width="12%">Application Status</TableCell>
                   <TableCell width="12%">Account Status</TableCell>
                   <TableCell width="8%">Verified</TableCell>
                   <TableCell width="10%">Created At</TableCell>
-                  <TableCell width="10%">Actions</TableCell>
+                  <TableCell width="15%">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -127,7 +126,6 @@ const UsersList: React.FC = () => {
                   <TableRow key={user._id} hover>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
                     <TableCell>
                       <StatusChip status={user.applicationStatus} />
                     </TableCell>
