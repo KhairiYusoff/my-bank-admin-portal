@@ -110,11 +110,11 @@ const UsersList: React.FC = () => {
                 <TableRow>
                   <TableCell width="20%">Name</TableCell>
                   <TableCell width="25%">Email</TableCell>
-                  <TableCell width="15%">Role</TableCell>
+                  <TableCell width="10%">Role</TableCell>
                   <TableCell width="15%">Status</TableCell>
                   <TableCell width="10%">Verified</TableCell>
-                  <TableCell width="15%">Created At</TableCell>
-                  <TableCell width="10%">Actions</TableCell>
+                  <TableCell width="10%">Created At</TableCell>
+                  <TableCell width="20%">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
