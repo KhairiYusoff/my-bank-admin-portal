@@ -136,7 +136,7 @@ const StaffPage: React.FC = () => {
                   <TableCell width="18%">Name</TableCell>
                   <TableCell width="22%">Email</TableCell>
                   <TableCell width="12%">Role</TableCell>
-                  <TableCell width="14%">Status</TableCell>
+                  <TableCell width="14%">Account Status</TableCell>
                   <TableCell width="8%">Verified</TableCell>
                   <TableCell width="8%">Profile</TableCell>
                   <TableCell width="10%">Created At</TableCell>
@@ -164,21 +164,7 @@ const StaffPage: React.FC = () => {
                       </Select>
                     </TableCell>
                     <TableCell>
-                      <Select
-                        size="small"
-                        value={member.applicationStatus}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            member,
-                            e.target.value as StaffStatus,
-                          )
-                        }
-                        sx={{ fontSize: "0.875rem" }}
-                      >
-                        <MenuItem value="active">active</MenuItem>
-                        <MenuItem value="suspended">suspended</MenuItem>
-                        <MenuItem value="terminated">terminated</MenuItem>
-                      </Select>
+                      <StatusChip status={member.status} />
                     </TableCell>
                     <TableCell>
                       {member.isVerified ? (

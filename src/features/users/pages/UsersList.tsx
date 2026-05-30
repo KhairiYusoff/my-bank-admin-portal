@@ -5,7 +5,7 @@ import {
   useUpdateCustomerMutation,
   useDeleteCustomerMutation,
 } from "@/features/users/store/usersApi";
-import type { User } from "@/features/users/types";
+import type { User, UserStatus } from "@/features/users/types";
 import {
   Box,
   Typography,
@@ -22,8 +22,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import {
   tableContainerStyles,
@@ -32,6 +30,7 @@ import {
 } from "@/components/shared/TableStyles";
 import UserActivityModal from "@/features/admin/components/UserActivityModal";
 import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
+import ChangeStatusModal from "@/features/users/components/ChangeStatusModal";
 import StatusChip from "@/components/shared/StatusChip";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -40,13 +39,16 @@ const UsersList: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
     null,
   );
+  const [statusTarget, setStatusTarget] = React.useState<User | null>(null);
   const [deleteTarget, setDeleteTarget] = React.useState<User | null>(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [updateCustomer] = useUpdateCustomerMutation();
+  const [updateCustomer, { isLoading: isUpdatingStatus }] =
+    useUpdateCustomerMutation();
   const [deleteCustomer, { isLoading: isDeleting }] =
     useDeleteCustomerMutation();
+
   const handleOpenActivityModal = (userId: string) => {
     setSelectedUserId(userId);
     setActivityModalOpen(true);
@@ -57,11 +59,13 @@ const UsersList: React.FC = () => {
     setSelectedUserId(null);
   };
 
-  const handleStatusChange = async (user: User, status: string) => {
+  const handleStatusConfirm = async (newStatus: UserStatus) => {
+    if (!statusTarget) return;
     await updateCustomer({
-      customerId: user._id,
-      body: { status: status as any },
+      customerId: statusTarget._id,
+      body: { status: newStatus },
     });
+    setStatusTarget(null);
   };
 
   const handleDeleteConfirm = async () => {
@@ -108,13 +112,14 @@ const UsersList: React.FC = () => {
             <Table sx={tableStyles}>
               <TableHead>
                 <TableRow>
-                  <TableCell width="20%">Name</TableCell>
-                  <TableCell width="25%">Email</TableCell>
-                  <TableCell width="10%">Role</TableCell>
-                  <TableCell width="15%">Status</TableCell>
-                  <TableCell width="10%">Verified</TableCell>
+                  <TableCell width="18%">Name</TableCell>
+                  <TableCell width="22%">Email</TableCell>
+                  <TableCell width="8%">Role</TableCell>
+                  <TableCell width="12%">Application Status</TableCell>
+                  <TableCell width="12%">Account Status</TableCell>
+                  <TableCell width="8%">Verified</TableCell>
                   <TableCell width="10%">Created At</TableCell>
-                  <TableCell width="20%">Actions</TableCell>
+                  <TableCell width="10%">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -126,6 +131,9 @@ const UsersList: React.FC = () => {
                     <TableCell>
                       <StatusChip status={user.applicationStatus} />
                     </TableCell>
+                    <TableCell>
+                      <StatusChip status={user.status} />
+                    </TableCell>
                     <TableCell>{user.isVerified ? "Yes" : "No"}</TableCell>
                     <TableCell>
                       {user.createdAt
@@ -136,18 +144,13 @@ const UsersList: React.FC = () => {
                       <Box
                         sx={{ display: "flex", gap: 1, alignItems: "center" }}
                       >
-                        <Select
+                        <Button
+                          variant="outlined"
                           size="small"
-                          value={user.applicationStatus || "active"}
-                          onChange={(e) =>
-                            handleStatusChange(user, e.target.value)
-                          }
-                          sx={{ fontSize: "0.75rem", minWidth: 100 }}
+                          onClick={() => setStatusTarget(user)}
                         >
-                          <MenuItem value="active">active</MenuItem>
-                          <MenuItem value="suspended">suspended</MenuItem>
-                          <MenuItem value="terminated">terminated</MenuItem>
-                        </Select>
+                          Manage
+                        </Button>
                         <Button
                           variant="outlined"
                           size="small"
@@ -197,6 +200,13 @@ const UsersList: React.FC = () => {
         open={isActivityModalOpen}
         onClose={handleCloseActivityModal}
         userId={selectedUserId}
+      />
+      <ChangeStatusModal
+        open={!!statusTarget}
+        user={statusTarget}
+        isLoading={isUpdatingStatus}
+        onConfirm={handleStatusConfirm}
+        onClose={() => setStatusTarget(null)}
       />
       <ConfirmationDialog
         open={!!deleteTarget}

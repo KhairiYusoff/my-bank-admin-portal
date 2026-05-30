@@ -1,18 +1,20 @@
 import { BaseResponse } from "@/features/users/types";
 
 export type StaffRole = "admin" | "banker";
+export type StaffStatus = "active" | "suspended" | "terminated";
 
 export interface StaffMember {
   _id: string;
   name: string;
   email: string;
   role: StaffRole;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  status: StaffStatus;
   applicationStatus: string;
+  isActive: boolean;
   isVerified: boolean;
   isProfileComplete: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface StaffListResponse extends BaseResponse {
@@ -36,8 +38,6 @@ export interface CreateStaffRequest {
 export interface CreateStaffResponse extends BaseResponse {
   data: StaffMember;
 }
-
-export type StaffStatus = "active" | "suspended" | "terminated";
 
 export interface UpdateStaffRequest {
   role?: StaffRole;

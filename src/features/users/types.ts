@@ -1,4 +1,6 @@
 // Common Types
+export type UserStatus = "active" | "suspended" | "terminated";
+
 export interface BaseResponse {
   success: boolean;
   message: string;
@@ -29,6 +31,7 @@ export interface User {
   name: string;
   email: string;
   phoneNumber: string;
+  status: UserStatus;
   applicationStatus: string;
   isVerified: boolean;
   isProfileComplete: boolean;
@@ -59,8 +62,6 @@ export interface UsersResponse extends BaseResponse {
   data: User[];
   meta: UsersMeta;
 }
-
-export type UserStatus = "active" | "suspended" | "terminated";
 
 export interface UpdateCustomerRequest {
   status: UserStatus;
