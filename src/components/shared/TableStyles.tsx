@@ -54,16 +54,6 @@ export const tableStyles: SxProps<Theme> = {
     "&:last-child": {
       borderRight: "none",
     },
-    // Add hover effect to show full content
-    "&:hover": {
-      overflow: "visible",
-      whiteSpace: "normal",
-      wordBreak: "break-word",
-      position: "relative",
-      zIndex: 1,
-      backgroundColor: "#fff",
-      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    },
   },
   "& .MuiTableHead-root": {
     backgroundColor: "#f5f5f5",
