@@ -1,81 +1,37 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
+import { useGetAllCustomersQuery } from "@/features/users/store/usersApi";
+import { formatDate } from "@/utils/formatters";
 import {
-  useGetAllCustomersQuery,
-  useUpdateCustomerMutation,
-  useDeleteCustomerMutation,
-} from "@/features/users/store/usersApi";
-import type { User, UserStatus } from "@/features/users/types";
-import {
+  Alert,
   Box,
-  Typography,
+  Button,
+  CircularProgress,
   Paper,
   Table,
-  TableHead,
-  TableRow,
-  TableCell,
   TableBody,
+  TableCell,
   TableContainer,
-  CircularProgress,
-  Alert,
+  TableHead,
   TablePagination,
-  Button,
-  IconButton,
-  Tooltip,
+  TableRow,
+  Typography,
 } from "@mui/material";
 import {
   tableContainerStyles,
   tableStyles,
   paperWrapperStyles,
 } from "@/components/shared/TableStyles";
-import UserActivityModal from "@/features/admin/components/UserActivityModal";
-import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
-import ChangeStatusModal from "@/features/users/components/ChangeStatusModal";
 import StatusChip from "@/components/shared/StatusChip";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const UsersList: React.FC = () => {
-  const [isActivityModalOpen, setActivityModalOpen] = React.useState(false);
-  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
-    null,
-  );
-  const [statusTarget, setStatusTarget] = React.useState<User | null>(null);
-  const [deleteTarget, setDeleteTarget] = React.useState<User | null>(null);
+  const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [updateCustomer, { isLoading: isUpdatingStatus }] =
-    useUpdateCustomerMutation();
-  const [deleteCustomer, { isLoading: isDeleting }] =
-    useDeleteCustomerMutation();
-
-  const handleOpenActivityModal = (userId: string) => {
-    setSelectedUserId(userId);
-    setActivityModalOpen(true);
-  };
-
-  const handleCloseActivityModal = () => {
-    setActivityModalOpen(false);
-    setSelectedUserId(null);
-  };
-
-  const handleStatusConfirm = async (newStatus: UserStatus) => {
-    if (!statusTarget) return;
-    await updateCustomer({
-      customerId: statusTarget._id,
-      body: { status: newStatus },
-    });
-    setStatusTarget(null);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!deleteTarget) return;
-    await deleteCustomer(deleteTarget._id);
-    setDeleteTarget(null);
-  };
-
   const { data, error, isLoading } = useGetAllCustomersQuery({
-    page: page + 1, // API is 1-based, MUI is 0-based
+    page: page + 1,
     limit: rowsPerPage,
     sort: "desc",
   });
@@ -134,38 +90,20 @@ const UsersList: React.FC = () => {
                     </TableCell>
                     <TableCell>{user.isVerified ? "Yes" : "No"}</TableCell>
                     <TableCell>
-                      {user.createdAt
-                        ? new Date(user.createdAt).toLocaleDateString()
-                        : "N/A"}
+                      {user.createdAt ? formatDate(user.createdAt) : "N/A"}
                     </TableCell>
                     <TableCell>
-                      <Box
-                        sx={{ display: "flex", gap: 1, alignItems: "center" }}
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() =>
+                          navigate(`/users/${user._id}`, {
+                            state: { user },
+                          })
+                        }
                       >
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={() => setStatusTarget(user)}
-                        >
-                          Manage
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={() => handleOpenActivityModal(user._id)}
-                        >
-                          Activity
-                        </Button>
-                        <Tooltip title="Delete customer">
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => setDeleteTarget(user)}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
+                        View →
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -177,7 +115,7 @@ const UsersList: React.FC = () => {
             component="div"
             count={data.meta.total}
             rowsPerPage={data.meta.limit}
-            page={data.meta.page - 1} // Convert to 0-based for MUI
+            page={data.meta.page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelRowsPerPage="Rows per page:"
@@ -193,29 +131,7 @@ const UsersList: React.FC = () => {
             No users found
           </Alert>
         )
-      )}{" "}
-      <UserActivityModal
-        open={isActivityModalOpen}
-        onClose={handleCloseActivityModal}
-        userId={selectedUserId}
-      />
-      <ChangeStatusModal
-        open={!!statusTarget}
-        user={statusTarget}
-        isLoading={isUpdatingStatus}
-        onConfirm={handleStatusConfirm}
-        onClose={() => setStatusTarget(null)}
-      />
-      <ConfirmationDialog
-        open={!!deleteTarget}
-        title="Delete Customer"
-        message={`Are you sure you want to delete ${deleteTarget?.name}? This cannot be undone.`}
-        confirmText="Delete"
-        severity="error"
-        loading={isDeleting}
-        onConfirm={handleDeleteConfirm}
-        onClose={() => setDeleteTarget(null)}
-      />
+      )}
     </Box>
   );
 };

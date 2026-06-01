@@ -1,5 +1,10 @@
 // Common Types
 export type UserStatus = "active" | "suspended" | "terminated";
+export type ApplicationStatus =
+  | "Pending"
+  | "Completed"
+  | "Rejected"
+  | "Approved";
 
 export interface BaseResponse {
   success: boolean;
@@ -32,9 +37,10 @@ export interface User {
   email: string;
   phoneNumber: string;
   status: UserStatus;
-  applicationStatus: string;
+  applicationStatus: ApplicationStatus;
   isVerified: boolean;
   isProfileComplete: boolean;
+  isFirstTime?: boolean;
   role: string;
   address: Address;
   preferences: Preferences;
@@ -47,6 +53,11 @@ export interface User {
   employmentType?: string;
   identityNumber?: string;
   job?: string;
+  nationality?: string;
+  residencyStatus?: string;
+  maritalStatus?: string;
+  salary?: string;
+  purposeOfAccount?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -72,6 +83,10 @@ export interface UpdateCustomerResponse extends BaseResponse {
 }
 
 export interface DeleteCustomerResponse extends BaseResponse {}
+
+export interface GetCustomerByIdResponse extends BaseResponse {
+  data: User;
+}
 
 export interface UsersQueryParams {
   page?: number;

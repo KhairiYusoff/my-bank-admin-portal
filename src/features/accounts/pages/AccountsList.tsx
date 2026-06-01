@@ -1,6 +1,5 @@
 import React from "react";
 import { useGetAllAccountsQuery } from "@/features/accounts/store/accountsApi";
-import type { Account } from "@/features/admin/store/adminApi";
 import {
   Box,
   Typography,

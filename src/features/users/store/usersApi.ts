@@ -5,6 +5,7 @@ import type {
   UpdateCustomerRequest,
   UpdateCustomerResponse,
   DeleteCustomerResponse,
+  GetCustomerByIdResponse,
 } from "@/features/users/types";
 
 export const usersApi = api.injectEndpoints({
@@ -30,7 +31,10 @@ export const usersApi = api.injectEndpoints({
         method: "PUT",
         body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (result, error, { customerId }) => [
+        "User",
+        { type: "User", id: customerId },
+      ],
     }),
     deleteCustomer: builder.mutation<DeleteCustomerResponse, string>({
       query: (customerId: string) => ({
@@ -38,6 +42,10 @@ export const usersApi = api.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: ["User"],
+    }),
+    getCustomerById: builder.query<GetCustomerByIdResponse, string>({
+      query: (id) => ({ url: `/admin/customer/${id}`, method: "GET" }),
+      providesTags: (result, error, id) => [{ type: "User", id }],
     }),
   }),
   overrideExisting: false,
@@ -47,4 +55,5 @@ export const {
   useGetAllCustomersQuery,
   useUpdateCustomerMutation,
   useDeleteCustomerMutation,
+  useGetCustomerByIdQuery,
 } = usersApi;

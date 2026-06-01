@@ -3,18 +3,21 @@ import { RouteObject, useNavigate } from "react-router-dom";
 
 // Lazy load route components
 const Dashboard = lazy(
-  () => import("@/features/dashboard/components/Dashboard")
+  () => import("@/features/dashboard/components/Dashboard"),
 );
 const UsersList = lazy(() => import("@/features/users/pages/UsersList"));
+const UserDetailPage = lazy(
+  () => import("@/features/users/pages/UserDetailPage"),
+);
 const PendingApplications = lazy(
-  () => import("@/features/admin/components/PendingApplications")
+  () => import("@/features/admin/components/PendingApplications"),
 );
 const AuditLogPage = lazy(() => import("@/features/audit/pages/AuditLogPage"));
 const TransactionsList = lazy(
-  () => import("@/features/transactions/pages/TransactionsList")
+  () => import("@/features/transactions/pages/TransactionsList"),
 );
 const AccountsList = lazy(
-  () => import("@/features/accounts/pages/AccountsList")
+  () => import("@/features/accounts/pages/AccountsList"),
 );
 const Airdrop = lazy(() => import("@/features/admin/components/Airdrop"));
 const StaffPage = lazy(() => import("@/features/staff/pages/StaffPage"));
@@ -30,7 +33,7 @@ interface AppRoute extends Omit<RouteObject, "children"> {
 const createRoute = (
   path: string,
   element: React.ReactNode,
-  requiresAuth = true
+  requiresAuth = true,
 ): AppRoute => ({
   path,
   element,
@@ -41,6 +44,7 @@ const createRoute = (
 export const routes: AppRoute[] = [
   createRoute("/dashboard", <Dashboard />),
   createRoute("/users", <UsersList />),
+  createRoute("/users/:id", <UserDetailPage />),
   createRoute("/pending-applications", <PendingApplications />),
   createRoute("/audit", <AuditLogPage />),
   createRoute("/transactions", <TransactionsList />),
