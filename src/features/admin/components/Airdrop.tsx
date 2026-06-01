@@ -1,7 +1,7 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import {
   Box,
   Typography,
@@ -16,52 +16,48 @@ import {
   CardContent,
   Tooltip,
   IconButton,
-} from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import PaidIcon from '@mui/icons-material/Paid';
-import InfoIcon from '@mui/icons-material/Info';
-import DescriptionIcon from '@mui/icons-material/Description';
-import { LoadingButton } from '@mui/lab';
-import { useAirdropMutation } from '@/features/accounts/store/accountsApi';
+} from "@mui/material";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import PaidIcon from "@mui/icons-material/Paid";
+import InfoIcon from "@mui/icons-material/Info";
+import DescriptionIcon from "@mui/icons-material/Description";
+import { LoadingButton } from "@mui/lab";
+import { useAirdropMutation } from "@/features/accounts/store/accountsApi";
 
 interface SnackbarState {
   open: boolean;
   message: string;
-  severity: 'success' | 'error';
+  severity: "success" | "error";
 }
 
 interface AirdropFormData {
   accountNumber: string;
   amount: number;
-  reference: string;
+  memo: string;
 }
 
 const airdropSchema = yup.object().shape({
   accountNumber: yup
     .string()
-    .required('Account number is required')
-    .matches(/^\d+$/, 'Account number must contain only numbers'),
+    .required("Account number is required")
+    .matches(/^\d+$/, "Account number must contain only numbers"),
   amount: yup
     .number()
-    .typeError('Amount must be a number')
-    .positive('Amount must be positive')
-    .required('Amount is required')
-    .test(
-      'is-decimal',
-      'Amount must have up to 2 decimal places',
-      (value) => {
-        if (!value) return true;
-        return /^\d+(\.\d{1,2})?$/.test(value.toString());
-      }
-    ),
-  reference: yup.string().required('Please provide a reference for tracking'),
+    .typeError("Amount must be a number")
+    .positive("Amount must be positive")
+    .required("Amount is required")
+    .test("is-decimal", "Amount must have up to 2 decimal places", (value) => {
+      if (!value) return true;
+      return /^\d+(\.\d{1,2})?$/.test(value.toString());
+    }),
+  memo: yup.string().max(255).optional(),
 });
 
 const Airdrop = (): JSX.Element => {
   const [snackbarState, setSnackbarState] = React.useState<SnackbarState>({
     open: false,
-    message: '',
-    severity: 'success',
+    message: "",
+    severity: "success",
   });
 
   const [airdrop, { isLoading }] = useAirdropMutation();
@@ -73,12 +69,12 @@ const Airdrop = (): JSX.Element => {
     formState: { errors, isDirty, isValid },
   } = useForm<AirdropFormData>({
     resolver: yupResolver(airdropSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
-      accountNumber: '',
+      accountNumber: "",
       amount: 0.01,
-      reference: '',
-    }
+      memo: "",
+    },
   });
 
   const onSubmit = async (formData: AirdropFormData): Promise<void> => {
@@ -86,20 +82,20 @@ const Airdrop = (): JSX.Element => {
       await airdrop({
         accountNumber: formData.accountNumber,
         amount: formData.amount,
-        reference: formData.reference,
+        memo: formData.memo || undefined,
       }).unwrap();
 
       setSnackbarState({
         open: true,
-        message: 'Airdrop successful!',
-        severity: 'success',
+        message: "Airdrop successful!",
+        severity: "success",
       });
       reset();
     } catch (err: any) {
       setSnackbarState({
         open: true,
-        message: err.data?.message || 'Failed to process airdrop',
-        severity: 'error',
+        message: err.data?.message || "Failed to process airdrop",
+        severity: "error",
       });
     }
   };
@@ -108,20 +104,42 @@ const Airdrop = (): JSX.Element => {
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 1200, mx: "auto" }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#1a237e', display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{
+            color: "#1a237e",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
           <PaidIcon sx={{ fontSize: 32 }} /> Airdrop Tokens
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ ml: 0.5 }}>
-          Send tokens directly to a user's account. Please verify all details before submitting.
+          Send tokens directly to a user's account. Please verify all details
+          before submitting.
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 300px' }, gap: 3, mb: 4 }}>
-        <Card sx={{ bgcolor: '#e8f5e9', mb: 2 }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "1fr 300px" },
+          gap: 3,
+          mb: 4,
+        }}
+      >
+        <Card sx={{ bgcolor: "#e8f5e9", mb: 2 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            >
               <InfoIcon color="success" /> Important Information
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
@@ -131,13 +149,15 @@ const Airdrop = (): JSX.Element => {
               • Amount must be positive with up to 2 decimal places
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              • Reference is required for transaction tracking
+              • Add an optional memo to describe the reason for the airdrop
             </Typography>
           </CardContent>
         </Card>
       </Box>
 
-      <Paper sx={{ p: 4, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+      <Paper
+        sx={{ p: 4, borderRadius: 2, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+      >
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={3}>
             <Controller
@@ -155,7 +175,9 @@ const Airdrop = (): JSX.Element => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <AccountBalanceWalletIcon color={errors.accountNumber ? 'error' : 'action'} />
+                        <AccountBalanceWalletIcon
+                          color={errors.accountNumber ? "error" : "action"}
+                        />
                       </InputAdornment>
                     ),
                   }}
@@ -163,7 +185,6 @@ const Airdrop = (): JSX.Element => {
                 />
               )}
             />
-
 
             <Controller
               name="amount"
@@ -190,39 +211,33 @@ const Airdrop = (): JSX.Element => {
             />
 
             <Controller
-              name="reference"
+              name="memo"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Reference"
+                  label="Memo (Optional)"
                   fullWidth
                   margin="normal"
-                  error={!!errors.reference}
-                  helperText={errors.reference?.message}
+                  error={!!errors.memo}
+                  helperText={errors.memo?.message}
+                  inputProps={{ maxLength: 255 }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <DescriptionIcon color={errors.reference ? 'error' : 'action'} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Tooltip title="Add a reference to help identify this transaction later">
-                          <IconButton size="small" edge="end">
-                            <InfoIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        <DescriptionIcon
+                          color={errors.memo ? "error" : "action"}
+                        />
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="e.g., June 2025 Bonus Payment"
+                  placeholder="Reason for airdrop (e.g. Q2 campaign)"
                 />
               )}
             />
 
             <Divider sx={{ my: 3 }} />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
               <LoadingButton
                 type="submit"
                 variant="contained"
@@ -232,7 +247,7 @@ const Airdrop = (): JSX.Element => {
                 startIcon={<PaidIcon />}
                 disabled={!isDirty || !isValid || isLoading}
               >
-                {isLoading ? 'Processing...' : 'Send Tokens'}
+                {isLoading ? "Processing..." : "Send Tokens"}
               </LoadingButton>
             </Box>
           </Stack>
@@ -243,12 +258,12 @@ const Airdrop = (): JSX.Element => {
         open={snackbarState.open}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbarState.severity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbarState.message}
         </Alert>

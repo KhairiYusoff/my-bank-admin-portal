@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetAllTransactionsQuery } from "@/features/transactions/store/transactionsApi";
 import type { Transaction } from "@/features/transactions/types";
+import { TransactionDetailDrawer } from "@/features/transactions/components";
 import {
   Box,
   Typography,
@@ -17,12 +18,6 @@ import {
   TablePagination,
   IconButton,
   Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Divider,
 } from "@mui/material";
 import {
   tableContainerStyles,
@@ -110,11 +105,15 @@ const TransactionsList: React.FC = () => {
               {data?.data.map((transaction) => (
                 <TableRow key={transaction._id} hover>
                   <TableCell>
-                    <Typography variant="body2" fontWeight="medium">
-                      {transaction.account?.accountNumber || "N/A"}
+                    <Typography
+                      variant="body2"
+                      fontWeight="medium"
+                      fontFamily="monospace"
+                    >
+                      {transaction.reference ?? "—"}
                     </Typography>
                     <Typography variant="caption" color="textSecondary">
-                      {transaction.description}
+                      {transaction.account?.accountNumber}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -175,81 +174,10 @@ const TransactionsList: React.FC = () => {
         )}
       </Paper>
 
-      <Dialog
-        open={!!selectedTransaction}
+      <TransactionDetailDrawer
+        transaction={selectedTransaction}
         onClose={() => setSelectedTransaction(null)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Transaction Details</DialogTitle>
-        <DialogContent dividers>
-          {selectedTransaction && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <Box>
-                <Typography variant="caption" color="text.secondary">
-                  Account
-                </Typography>
-                <Typography>
-                  {selectedTransaction.account?.accountNumber || "N/A"}
-                </Typography>
-              </Box>
-              <Divider />
-              <Box>
-                <Typography variant="caption" color="text.secondary">
-                  Description
-                </Typography>
-                <Typography>
-                  {selectedTransaction.description || "—"}
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <Box flex={1}>
-                  <Typography variant="caption" color="text.secondary">
-                    Type
-                  </Typography>
-                  <Typography>{selectedTransaction.type}</Typography>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="caption" color="text.secondary">
-                    Amount
-                  </Typography>
-                  <Typography fontWeight="medium">
-                    {formatCurrency(selectedTransaction.amount)}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <Box flex={1}>
-                  <Typography variant="caption" color="text.secondary">
-                    Status
-                  </Typography>
-                  <StatusChip status={selectedTransaction.status} />
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="caption" color="text.secondary">
-                    Date
-                  </Typography>
-                  <Typography>
-                    {formatDateTime(selectedTransaction.date)}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box>
-                <Typography variant="caption" color="text.secondary">
-                  Performed By
-                </Typography>
-                <Typography>
-                  {selectedTransaction.performedBy?.name || "System"} (
-                  {selectedTransaction.performedBy?.role || "—"})
-                </Typography>
-              </Box>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSelectedTransaction(null)}>Close</Button>
-        </DialogActions>
-      </Dialog>
+      />
     </Box>
   );
 };

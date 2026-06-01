@@ -1,2 +1,1 @@
-// Component exports
-export {};
+export { default as TransactionDetailDrawer } from "./TransactionDetailDrawer";

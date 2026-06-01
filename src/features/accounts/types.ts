@@ -1,4 +1,4 @@
-import { BaseResponse } from '@/features/users/types';
+import { BaseResponse } from "@/features/users/types";
 
 export interface AccountUser {
   _id: string;
@@ -38,7 +38,7 @@ export interface AccountsResponse extends BaseResponse {
 export interface AccountsQueryParams {
   page?: number;
   limit?: number;
-  sort?: 'asc' | 'desc';
+  sort?: "asc" | "desc";
   status?: string;
   type?: string;
 }
@@ -46,7 +46,7 @@ export interface AccountsQueryParams {
 export interface AirdropRequest {
   accountNumber: string;
   amount: number;
-  description?: string;
+  memo?: string;
 }
 
 export interface AirdropResponse extends BaseResponse {
