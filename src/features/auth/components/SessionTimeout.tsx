@@ -1,6 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { setupInactivityTimer, INACTIVITY_TIMEOUT, WARNING_TIMEOUT } from "@/features/auth/store/sessionUtils";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import {
+  setupInactivityTimer,
+  INACTIVITY_TIMEOUT,
+  WARNING_TIMEOUT,
+} from "@/features/auth/store/sessionUtils";
 
 interface SessionTimeoutProps {
   onLogout: () => void;
@@ -12,7 +24,7 @@ const SessionTimeout: React.FC<SessionTimeoutProps> = ({
   onLogout,
   // Convert ms to seconds for the countdown display
   warningTime = WARNING_TIMEOUT / 1000,
-  logoutTime = INACTIVITY_TIMEOUT / 1000
+  logoutTime = INACTIVITY_TIMEOUT / 1000,
 }) => {
   const [open, setOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState(warningTime);
@@ -45,10 +57,10 @@ const SessionTimeout: React.FC<SessionTimeoutProps> = ({
       () => {
         setOpen(true);
         setTimeLeft(warningTime);
-        
+
         // Start countdown
         const timer = setInterval(() => {
-          setTimeLeft(prev => {
+          setTimeLeft((prev) => {
             if (prev <= 1) {
               clearInterval(timer);
               handleLogout();
@@ -57,9 +69,9 @@ const SessionTimeout: React.FC<SessionTimeoutProps> = ({
             return prev - 1;
           });
         }, 1000);
-        
+
         setCountdown(timer);
-      }
+      },
     );
 
     return () => {
@@ -68,17 +80,17 @@ const SessionTimeout: React.FC<SessionTimeoutProps> = ({
     };
   }, [onLogout, warningTime]);
 
-
-
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
+  const formattedTime = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
   return (
     <Dialog open={open}>
       <DialogTitle>Session Timeout</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Your session is about to expire due to inactivity. You will be logged out in {timeLeft} seconds.
+          Your session is about to expire due to inactivity. You will be logged
+          out in {formattedTime}.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
