@@ -40,7 +40,10 @@ const airdropSchema = yup.object().shape({
   accountNumber: yup
     .string()
     .required("Account number is required")
-    .matches(/^\d+$/, "Account number must contain only numbers"),
+    .matches(
+      /^[A-Z0-9]+$/,
+      "Account number must contain only letters and numbers",
+    ),
   amount: yup
     .number()
     .typeError("Amount must be a number")
@@ -72,7 +75,7 @@ const Airdrop = (): JSX.Element => {
     mode: "onChange",
     defaultValues: {
       accountNumber: "",
-      amount: 0.01,
+      amount: undefined,
       memo: "",
     },
   });
@@ -192,6 +195,7 @@ const Airdrop = (): JSX.Element => {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  value={field.value ?? ""}
                   label="Amount"
                   type="number"
                   inputMode="decimal"
@@ -201,8 +205,8 @@ const Airdrop = (): JSX.Element => {
                   error={!!errors.amount}
                   helperText={errors.amount?.message}
                   InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">MYR</InputAdornment>
+                    startAdornment: (
+                      <InputAdornment position="start">RM</InputAdornment>
                     ),
                     inputProps: { min: 0.01, step: 0.01 },
                   }}
