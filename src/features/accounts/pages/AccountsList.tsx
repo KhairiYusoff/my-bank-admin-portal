@@ -1,61 +1,66 @@
-import React from 'react';
-import { useGetAllAccountsQuery } from '@/features/accounts/store/accountsApi';
-import type { Account } from '@/features/admin/store/adminApi';
-import { 
-  Box, 
-  Typography, 
+import React from "react";
+import { useGetAllAccountsQuery } from "@/features/accounts/store/accountsApi";
+import type { Account } from "@/features/admin/store/adminApi";
+import {
+  Box,
+  Typography,
   Paper,
-  Table, 
-  TableHead, 
-  TableRow, 
-  TableCell, 
-  TableBody, 
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
   TableContainer,
-  CircularProgress, 
+  CircularProgress,
   Alert,
   Chip,
   TablePagination,
   IconButton,
   Tooltip,
-  Avatar
-} from '@mui/material';
-import { tableContainerStyles, tableStyles, paperWrapperStyles } from '@/components/shared/TableStyles';
-import { formatCurrency, formatDate } from '@/utils/formatters';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import StatusChip from '@/components/shared/StatusChip';
+  Avatar,
+} from "@mui/material";
+import {
+  tableContainerStyles,
+  tableStyles,
+  paperWrapperStyles,
+} from "@/components/shared/TableStyles";
+import { formatCurrency, formatDate } from "@/utils/formatters";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import StatusChip from "@/components/shared/StatusChip";
 
 const AccountsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10); 
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { data, error, isLoading } = useGetAllAccountsQuery({
     page: page + 1, // API is 1-based, MUI is 0-based
     limit: rowsPerPage,
-    sort: 'desc'
+    sort: "desc",
   });
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-
   const getAccountTypeColor = (type: string) => {
     switch (type?.toLowerCase()) {
-      case 'savings':
-        return 'primary';
-      case 'checking':
-        return 'success';
-      case 'business':
-        return 'secondary';
-      case 'fixed':
-        return 'warning';
+      case "savings":
+        return "primary";
+      case "checking":
+        return "success";
+      case "business":
+        return "secondary";
+      case "fixed":
+        return "warning";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -76,11 +81,11 @@ const AccountsList: React.FC = () => {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: "100%" }}>
       <Typography variant="h5" component="h1" gutterBottom>
         Accounts
       </Typography>
-      
+
       <Paper sx={paperWrapperStyles}>
         <TableContainer sx={tableContainerStyles}>
           <Table sx={tableStyles}>
@@ -100,15 +105,19 @@ const AccountsList: React.FC = () => {
                 <TableRow key={account._id} hover>
                   <TableCell>
                     <Box display="flex" alignItems="center">
-                      <Avatar sx={{ bgcolor: 'primary.main', mr: 1, width: 32, height: 32 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: "primary.main",
+                          mr: 1,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
                         <AccountBalanceIcon fontSize="small" />
                       </Avatar>
                       <Box>
                         <Typography variant="body2" fontWeight="medium">
                           {account.accountNumber}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {account.currency}
                         </Typography>
                       </Box>
                     </Box>
@@ -122,10 +131,10 @@ const AccountsList: React.FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={account.accountType || 'Unknown'}
-                      color={getAccountTypeColor(account.accountType) as any} 
-                      size="small" 
+                    <Chip
+                      label={account.accountType || "Unknown"}
+                      color={getAccountTypeColor(account.accountType) as any}
+                      size="small"
                     />
                   </TableCell>
                   <TableCell>
@@ -137,7 +146,7 @@ const AccountsList: React.FC = () => {
                     <StatusChip status={account.status} />
                   </TableCell>
                   <TableCell>
-                    {formatDate(account.dateOpened, 'MMM d, yyyy')}
+                    {formatDate(account.dateOpened, "MMM d, yyyy")}
                   </TableCell>
                   <TableCell>
                     <Tooltip title="View Details">
@@ -151,10 +160,10 @@ const AccountsList: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         {data && (
           <TablePagination
-            rowsPerPageOptions={[10, 20, 50]} 
+            rowsPerPageOptions={[10, 20, 50]}
             component="div"
             count={data?.meta?.total || 0}
             rowsPerPage={rowsPerPage}
