@@ -148,8 +148,7 @@ const TransactionDetailDrawer: React.FC<TransactionDetailDrawerProps> = ({
                   : "success.main"
               }
             >
-              {getAmountPrefix(transaction)}RM
-              {transaction.amount.toFixed(2)}
+              {getAmountPrefix(transaction)}RM {transaction.amount.toFixed(2)}
             </Typography>
           </Box>
 
@@ -292,20 +291,20 @@ const TransactionDetailDrawer: React.FC<TransactionDetailDrawerProps> = ({
             {transaction.balanceBefore != null && (
               <DetailRow
                 label="Balance before"
-                value={`RM${transaction.balanceBefore.toFixed(2)}`}
+                value={`RM ${transaction.balanceBefore.toFixed(2)}`}
               />
             )}
             {transaction.balanceAfter != null && (
               <DetailRow
                 label="Balance after"
-                value={`RM${transaction.balanceAfter.toFixed(2)}`}
+                value={`RM ${transaction.balanceAfter.toFixed(2)}`}
               />
             )}
 
             {/* Fee — always show */}
             <DetailRow
               label="Fee"
-              value={`RM${(transaction.fee ?? 0).toFixed(2)}`}
+              value={`RM ${(transaction.fee ?? 0).toFixed(2)}`}
             />
 
             {/* Date */}
