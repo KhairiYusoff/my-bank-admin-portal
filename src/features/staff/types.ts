@@ -13,6 +13,13 @@ export interface StaffMember {
   isActive: boolean;
   isVerified: boolean;
   isProfileComplete: boolean;
+  isFirstTime?: boolean;
+  preferences?: {
+    theme?: string;
+    language?: string;
+    notifications?: boolean;
+  };
+  passwordChangedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,6 +56,10 @@ export interface UpdateStaffResponse extends BaseResponse {
 }
 
 export interface DeleteStaffResponse extends BaseResponse {}
+
+export interface GetStaffByIdResponse extends BaseResponse {
+  data: StaffMember;
+}
 
 export interface StaffQueryParams {
   page?: number;

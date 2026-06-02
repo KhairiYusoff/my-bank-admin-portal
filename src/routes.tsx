@@ -21,6 +21,9 @@ const AccountsList = lazy(
 );
 const Airdrop = lazy(() => import("@/features/admin/components/Airdrop"));
 const StaffPage = lazy(() => import("@/features/staff/pages/StaffPage"));
+const StaffDetailPage = lazy(
+  () => import("@/features/staff/pages/StaffDetailPage"),
+);
 const NotFoundPage = lazy(() => import("@/components/shared/NotFoundPage"));
 
 // Extend RouteObject to include requiresAuth
@@ -51,6 +54,7 @@ export const routes: AppRoute[] = [
   createRoute("/accounts", <AccountsList />),
   createRoute("/airdrop", <Airdrop />),
   createRoute("/staff", <StaffPage />),
+  createRoute("/staff/:id", <StaffDetailPage />),
   createRoute("*", <NotFoundPage />, false),
 ];
 

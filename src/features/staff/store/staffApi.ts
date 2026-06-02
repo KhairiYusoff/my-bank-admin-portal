@@ -6,6 +6,7 @@ import type {
   UpdateStaffRequest,
   UpdateStaffResponse,
   DeleteStaffResponse,
+  GetStaffByIdResponse,
 } from "@/features/staff/types";
 
 export const staffApi = api.injectEndpoints({
@@ -47,6 +48,10 @@ export const staffApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Staff"],
     }),
+    getStaffById: builder.query<GetStaffByIdResponse, string>({
+      query: (id) => ({ url: `/admin/staff/${id}`, method: "GET" }),
+      providesTags: (result, error, id) => [{ type: "Staff", id }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -56,4 +61,5 @@ export const {
   useCreateStaffMutation,
   useUpdateStaffMutation,
   useDeleteStaffMutation,
+  useGetStaffByIdQuery,
 } = staffApi;
