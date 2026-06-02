@@ -25,7 +25,10 @@ import {
 import { useGetAllAuditLogsQuery } from "../store/auditApi";
 import StatusChip from "@/components/shared/StatusChip";
 import { format } from "date-fns";
-import { StyledTableCell, StyledTableRow } from "@/components/shared/TableStyles";
+import {
+  StyledTableCell,
+  StyledTableRow,
+} from "@/components/shared/TableStyles";
 
 const AuditLogPage: React.FC = () => {
   const [page, setPage] = useState(0);
@@ -36,17 +39,20 @@ const AuditLogPage: React.FC = () => {
     status: "",
   });
 
-  const { data, isLoading, error, refetch, isFetching } = useGetAllAuditLogsQuery({
-    page: page + 1,
-    limit: rowsPerPage,
-    ...filters,
-  });
+  const { data, isLoading, error, refetch, isFetching } =
+    useGetAllAuditLogsQuery({
+      page: page + 1,
+      limit: rowsPerPage,
+      ...filters,
+    });
 
   const handlePageChange = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -75,14 +81,21 @@ const AuditLogPage: React.FC = () => {
   if (error) {
     return (
       <Box p={3}>
-        <Alert severity="error">Failed to load audit logs. Please try again later.</Alert>
+        <Alert severity="error">
+          Failed to load audit logs. Please try again later.
+        </Alert>
       </Box>
     );
   }
 
   return (
-    <Box p={3}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+    <Box sx={{ p: 3, width: "calc(100vw - 288px)" }}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
         <Typography variant="h4" component="h1">
           System Audit Logs
         </Typography>
@@ -96,7 +109,7 @@ const AuditLogPage: React.FC = () => {
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} width="30%">
             <TextField
               fullWidth
               label="Action"
@@ -106,7 +119,7 @@ const AuditLogPage: React.FC = () => {
               size="small"
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} width="10%">
             <TextField
               fullWidth
               select
@@ -123,7 +136,7 @@ const AuditLogPage: React.FC = () => {
               <MenuItem value="CRITICAL">Critical</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} width="10%">
             <TextField
               fullWidth
               select
@@ -189,7 +202,9 @@ const AuditLogPage: React.FC = () => {
             ) : (
               data?.data.map((log) => (
                 <StyledTableRow key={log._id}>
-                  <TableCell>{format(new Date(log.createdAt), "yyyy-MM-dd HH:mm:ss")}</TableCell>
+                  <TableCell>
+                    {format(new Date(log.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                  </TableCell>
                   <TableCell>
                     <Box>
                       <Typography variant="body2" fontWeight="medium">
@@ -205,7 +220,10 @@ const AuditLogPage: React.FC = () => {
                     <StatusChip status={log.status} />
                   </TableCell>
                   <TableCell>
-                    <StatusChip status={log.severity} color={getSeverityColor(log.severity)} />
+                    <StatusChip
+                      status={log.severity}
+                      color={getSeverityColor(log.severity)}
+                    />
                   </TableCell>
                   <TableCell>{log.ipAddress}</TableCell>
                 </StyledTableRow>
