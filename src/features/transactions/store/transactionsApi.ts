@@ -5,6 +5,13 @@ import type {
   TransactionDetailResponse,
 } from "@/features/transactions/types";
 
+export interface AccountTransactionsQueryParams {
+  accountNumber: string;
+  page?: number;
+  limit?: number;
+  sort?: "asc" | "desc";
+}
+
 export const transactionsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllTransactions: builder.query<
@@ -24,6 +31,19 @@ export const transactionsApi = api.injectEndpoints({
       }),
       providesTags: ["Transactions"],
     }),
+    getAccountTransactions: builder.query<
+      TransactionsResponse,
+      AccountTransactionsQueryParams
+    >({
+      query: ({ accountNumber, page = 1, limit = 10, sort = "desc" }) => ({
+        url: `/transactions/account/${accountNumber}`,
+        method: "GET",
+        params: { page, limit, sort },
+      }),
+      providesTags: (_result, _error, { accountNumber }) => [
+        { type: "Transactions", id: accountNumber },
+      ],
+    }),
     getTransactionDetails: builder.query<TransactionDetailResponse, string>({
       query: (transactionId: string) => ({
         url: `/transactions/${transactionId}`,
@@ -34,5 +54,8 @@ export const transactionsApi = api.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetAllTransactionsQuery, useGetTransactionDetailsQuery } =
-  transactionsApi;
+export const {
+  useGetAllTransactionsQuery,
+  useGetAccountTransactionsQuery,
+  useGetTransactionDetailsQuery,
+} = transactionsApi;

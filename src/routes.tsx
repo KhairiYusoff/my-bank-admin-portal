@@ -22,6 +22,9 @@ const AccountsList = lazy(
 const AccountDetailPage = lazy(
   () => import("@/features/accounts/pages/AccountDetailPage"),
 );
+const AccountTransactionsPage = lazy(
+  () => import("@/features/accounts/pages/AccountTransactionsPage"),
+);
 const Airdrop = lazy(() => import("@/features/admin/components/Airdrop"));
 const StaffPage = lazy(() => import("@/features/staff/pages/StaffPage"));
 const StaffDetailPage = lazy(
@@ -56,6 +59,10 @@ export const routes: AppRoute[] = [
   createRoute("/transactions", <TransactionsList />),
   createRoute("/accounts", <AccountsList />),
   createRoute("/accounts/:accountNumber", <AccountDetailPage />),
+  createRoute(
+    "/accounts/:accountNumber/transactions",
+    <AccountTransactionsPage />,
+  ),
   createRoute("/airdrop", <Airdrop />),
   createRoute("/staff", <StaffPage />),
   createRoute("/staff/:id", <StaffDetailPage />),

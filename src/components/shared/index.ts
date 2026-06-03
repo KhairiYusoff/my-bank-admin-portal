@@ -1,4 +1,6 @@
 // Components
+export { default as AppBreadcrumbs } from "./AppBreadcrumbs";
+export type { BreadcrumbItem } from "./AppBreadcrumbs";
 export { default as ConfirmationDialog } from "./ConfirmationDialog";
 export { default as DetailSection } from "./DetailSection";
 export { default as EmptyState } from "./EmptyState";

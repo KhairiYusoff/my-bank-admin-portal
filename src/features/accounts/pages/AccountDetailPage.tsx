@@ -149,6 +149,19 @@ const AccountDetailPage: React.FC = () => {
         >
           {(currentUserRole === "admin" || currentUserRole === "banker") && (
             <Button
+              variant="outlined"
+              size="small"
+              onClick={() =>
+                navigate(`/accounts/${account.accountNumber}/transactions`, {
+                  state: { account },
+                })
+              }
+            >
+              View Transactions
+            </Button>
+          )}
+          {(currentUserRole === "admin" || currentUserRole === "banker") && (
+            <Button
               variant="contained"
               size="small"
               disabled={account.status === "Closed"}

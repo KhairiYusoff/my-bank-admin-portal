@@ -1,7 +1,8 @@
 export const formatCurrency = (
-  amount: number,
+  amount: number | null | undefined,
   currency: string = "MYR",
 ): string => {
+  if (amount == null || isNaN(amount)) return "—";
   return new Intl.NumberFormat("en-MY", {
     style: "currency",
     currency,
