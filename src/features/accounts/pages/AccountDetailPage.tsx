@@ -147,16 +147,6 @@ const AccountDetailPage: React.FC = () => {
             alignSelf: "center",
           }}
         >
-          {account.user && (
-            <Button
-              variant="outlined"
-              size="small"
-              component={Link}
-              to={`/users/${account.user._id}`}
-            >
-              View Transactions
-            </Button>
-          )}
           {(currentUserRole === "admin" || currentUserRole === "banker") && (
             <Button
               variant="contained"
@@ -255,6 +245,12 @@ const AccountDetailPage: React.FC = () => {
                         <Button
                           component={Link}
                           to={`/users/${account.user._id}`}
+                          state={{
+                            from: {
+                              path: `/accounts/${account.accountNumber}`,
+                              label: "Back to Account Detail",
+                            },
+                          }}
                           variant="text"
                           size="small"
                           sx={{ p: 0, minWidth: 0 }}

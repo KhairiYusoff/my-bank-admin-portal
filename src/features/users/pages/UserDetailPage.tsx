@@ -28,7 +28,15 @@ const UserDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const routerStateUser = (location.state as { user?: User } | null)?.user;
+  const routerStateUser = (
+    location.state as {
+      user?: User;
+      from?: { path: string; label: string };
+    } | null
+  )?.user;
+  const backNav = (
+    location.state as { from?: { path: string; label: string } } | null
+  )?.from ?? { path: "/users", label: "Back to Users" };
 
   const currentUserRole = useAppSelector((state) => state.auth.user?.role);
 
@@ -88,7 +96,7 @@ const UserDetailPage: React.FC = () => {
         message: "Customer deleted.",
         severity: "success",
       });
-      navigate("/users");
+      navigate(backNav.path);
     } catch {
       setSnackbar({
         open: true,
@@ -112,10 +120,10 @@ const UserDetailPage: React.FC = () => {
       <Box sx={{ p: 3 }}>
         <Button
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate("/users")}
+          onClick={() => navigate(backNav.path)}
           sx={{ mb: 2 }}
         >
-          Back to Users
+          {backNav.label}
         </Button>
         {status === 404 ? (
           <Alert severity="warning">Customer not found.</Alert>
@@ -138,10 +146,10 @@ const UserDetailPage: React.FC = () => {
       {/* Back link */}
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate("/users")}
+        onClick={() => navigate(backNav.path)}
         sx={{ mb: 1, pl: 0 }}
       >
-        Back to Users
+        {backNav.label}
       </Button>
 
       {/* Header */}
