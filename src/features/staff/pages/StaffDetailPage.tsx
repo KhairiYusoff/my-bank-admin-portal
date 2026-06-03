@@ -205,14 +205,15 @@ const StaffDetailPage: React.FC = () => {
           >
             View Full Activity Log
           </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            disabled={isSelf}
-            onClick={() => setRoleModalOpen(true)}
-          >
-            Change Role
-          </Button>
+          {currentUserRole === "admin" && !isSelf && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setRoleModalOpen(true)}
+            >
+              Change Role
+            </Button>
+          )}
           <Button
             variant="contained"
             size="small"
