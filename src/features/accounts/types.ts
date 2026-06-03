@@ -5,6 +5,7 @@ export interface AccountUser {
   name: string;
   email: string;
   role: string;
+  phoneNumber?: string;
 }
 
 export interface Account {
@@ -18,11 +19,28 @@ export interface Account {
   currency: string;
   status: string;
   dateOpened: string;
+  dateClosed?: string;
   overdraftLimit: number;
   minimumBalance: number;
   __v: number;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface AccountDetail extends Account {
+  user: AccountUser | null;
+}
+
+export interface GetAccountByNumberResponse extends BaseResponse {
+  data: AccountDetail;
+}
+
+export interface UpdateAccountStatusRequest {
+  status: string;
+}
+
+export interface UpdateAccountStatusResponse extends BaseResponse {
+  data: AccountDetail;
 }
 
 export interface AccountsResponse extends BaseResponse {

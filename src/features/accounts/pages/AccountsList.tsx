@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetAllAccountsQuery } from "@/features/accounts/store/accountsApi";
 import {
   Box,
@@ -14,8 +15,7 @@ import {
   Alert,
   Chip,
   TablePagination,
-  IconButton,
-  Tooltip,
+  Button,
   Avatar,
 } from "@mui/material";
 import {
@@ -29,6 +29,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import StatusChip from "@/components/shared/StatusChip";
 
 const AccountsList: React.FC = () => {
+  const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { data, error, isLoading } = useGetAllAccountsQuery({
@@ -148,11 +149,17 @@ const AccountsList: React.FC = () => {
                     {formatDate(account.dateOpened, "MMM d, yyyy")}
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="View Details">
-                      <IconButton size="small">
-                        <VisibilityIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() =>
+                        navigate(`/accounts/${account.accountNumber}`, {
+                          state: { account },
+                        })
+                      }
+                    >
+                      View →
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
