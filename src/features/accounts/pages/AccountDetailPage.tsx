@@ -31,10 +31,10 @@ const AccountDetailPage: React.FC = () => {
 
   const { data, isLoading, error } = useGetAccountByNumberQuery(
     accountNumber!,
-    { skip: !accountNumber || !!routerStateAccount },
+    { skip: !accountNumber },
   );
 
-  const account: Account | undefined = routerStateAccount ?? data?.data;
+  const account: Account | undefined = data?.data ?? routerStateAccount;
 
   const currentUserRole = useAppSelector((state) => state.auth.user?.role);
 

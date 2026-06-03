@@ -54,7 +54,7 @@ const UserDetailPage: React.FC = () => {
     isLoading,
     error: fetchError,
   } = useGetCustomerByIdQuery(id!, {
-    skip: !id || !!routerStateUser,
+    skip: !id,
   });
 
   const [updateCustomer, { isLoading: isUpdatingStatus }] =
@@ -62,7 +62,7 @@ const UserDetailPage: React.FC = () => {
   const [deleteCustomer, { isLoading: isDeleting }] =
     useDeleteCustomerMutation();
 
-  const customer: User | undefined = routerStateUser ?? fetchedData?.data;
+  const customer: User | undefined = fetchedData?.data ?? routerStateUser;
 
   const handleStatusConfirm = async (newStatus: UserStatus) => {
     if (!customer) return;
@@ -106,7 +106,7 @@ const UserDetailPage: React.FC = () => {
     }
   };
 
-  if (!routerStateUser && isLoading) {
+  if (isLoading && !customer) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <CircularProgress />
@@ -114,7 +114,7 @@ const UserDetailPage: React.FC = () => {
     );
   }
 
-  if (!routerStateUser && fetchError) {
+  if (fetchError && !customer) {
     const status = (fetchError as any)?.status;
     return (
       <Box sx={{ p: 3 }}>

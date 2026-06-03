@@ -34,10 +34,10 @@ const StaffDetailPage: React.FC = () => {
     ?.staff;
 
   const { data, isLoading, error } = useGetStaffByIdQuery(id!, {
-    skip: !id || !!routerStateStaff,
+    skip: !id,
   });
 
-  const staff: StaffMember | undefined = routerStateStaff ?? data?.data;
+  const staff: StaffMember | undefined = data?.data ?? routerStateStaff;
 
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const currentUserRole = useAppSelector((state) => state.auth.user?.role);
@@ -59,7 +59,7 @@ const StaffDetailPage: React.FC = () => {
     severity: "success",
   });
 
-  if (isLoading) {
+  if (isLoading && !staff) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
         <CircularProgress />
