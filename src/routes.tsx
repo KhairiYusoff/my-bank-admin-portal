@@ -3,7 +3,7 @@ import { RouteObject, useNavigate } from "react-router-dom";
 
 // Lazy load route components
 const Dashboard = lazy(
-  () => import("@/features/dashboard/components/Dashboard"),
+  () => import("@/features/dashboard/pages/DashboardPage"),
 );
 const UsersList = lazy(() => import("@/features/users/pages/UsersList"));
 const UserDetailPage = lazy(
