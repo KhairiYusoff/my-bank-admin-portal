@@ -30,7 +30,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   return (
     <Card
       sx={{
-        boxShadow: "0 1px 4px rgba(0,0,0,0.09)",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
         borderRadius: 2,
         height: "100%",
       }}

@@ -60,7 +60,7 @@ const DashboardPage: React.FC = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "flex-start",
-              mb: 5,
+              mb: 8,
             }}
           >
             <Box>
@@ -86,10 +86,11 @@ const DashboardPage: React.FC = () => {
               gridTemplateColumns: {
                 xs: "1fr",
                 sm: "1fr 1fr",
-                md: "repeat(4, 1fr)",
+                md: "repeat(5, 1fr)",
               },
-              gap: 2.5,
-              mb: 3,
+              gap: 3,
+              mb: 5,
+              height: 200,
             }}
           >
             <KpiCard
@@ -99,6 +100,14 @@ const DashboardPage: React.FC = () => {
               icon={<PeopleIcon />}
               iconColor="#1976d2"
               to="/users"
+            />
+            <KpiCard
+              label="Pending Applications"
+              count={attention?.pendingApplications}
+              sublabel="Awaiting review"
+              icon={<PendingIcon />}
+              iconColor="#ed6c02"
+              to="/pending-applications"
             />
             <KpiCard
               label="Total Accounts"
@@ -130,9 +139,10 @@ const DashboardPage: React.FC = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-              gap: 2.5,
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(4, 1fr)" },
+              gap: 3,
               mb: 3,
+              height: 180,
             }}
           >
             <FinancialCard
@@ -170,16 +180,6 @@ const DashboardPage: React.FC = () => {
                 netFlow !== undefined && netFlow < 0 ? "#c62828" : "#1565c0"
               }
             />
-          </Box>
-
-          {/* ── Row 3: Portfolio + Attention ── */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 2fr" },
-              gap: 2.5,
-            }}
-          >
             <FinancialCard
               label="Total Portfolio (AUM)"
               value={financials?.totalPortfolioBalance}
@@ -187,35 +187,32 @@ const DashboardPage: React.FC = () => {
               icon={<PortfolioIcon />}
               accentColor="#1565c0"
             />
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 2.5,
-              }}
-            >
-              <AttentionCard
-                label="Pending Applications"
-                count={attention?.pendingApplications}
-                icon={<PendingIcon />}
-                accentColor="#ed6c02"
-                to="/users?applicationStatus=pending"
-              />
-              <AttentionCard
-                label="Failed Txns Today"
-                count={attention?.failedTransactionsToday}
-                icon={<FailedIcon />}
-                accentColor="#c62828"
-                to="/transactions?status=failed"
-              />
-              <AttentionCard
-                label="Dormant Accounts"
-                count={attention?.dormantAccounts}
-                icon={<DormantIcon />}
-                accentColor="#546e7a"
-                to="/accounts?status=Dormant"
-              />
-            </Box>
+          </Box>
+
+          {/* ── Row 3: Portfolio + Attention ── */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+              gap: 3,
+              width: "50%",
+              height: 180,
+            }}
+          >
+            <AttentionCard
+              label="Failed Txns Today"
+              count={attention?.failedTransactionsToday}
+              icon={<FailedIcon />}
+              accentColor="#c62828"
+              to="/transactions?status=failed"
+            />
+            <AttentionCard
+              label="Dormant Accounts"
+              count={attention?.dormantAccounts}
+              icon={<DormantIcon />}
+              accentColor="#546e7a"
+              to="/accounts?status=Dormant"
+            />
           </Box>
         </>
       )}
