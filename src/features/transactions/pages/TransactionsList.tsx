@@ -27,6 +27,10 @@ import {
 import { formatCurrency, formatDateTime } from "@/utils/formatters";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import StatusChip from "@/components/shared/StatusChip";
+import {
+  getTransactionTypeColor,
+  getTransactionTypeLabel,
+} from "@/features/transactions/utils/transactionColors";
 
 const TransactionsList: React.FC = () => {
   const [page, setPage] = React.useState(0);
@@ -49,21 +53,6 @@ const TransactionsList: React.FC = () => {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const getTypeColor = (type: string) => {
-    if (!type) return "default";
-    switch (type.toLowerCase()) {
-      case "transfer":
-        return "primary";
-      case "deposit":
-      case "airdrop":
-        return "success";
-      case "withdrawal":
-        return "warning";
-      default:
-        return "default";
-    }
   };
 
   if (isLoading) {
@@ -118,8 +107,16 @@ const TransactionsList: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={transaction.type || "UNKNOWN"}
-                      color={getTypeColor(transaction.type) as any}
+                      label={getTransactionTypeLabel(
+                        transaction.type,
+                        transaction.direction,
+                      )}
+                      color={
+                        getTransactionTypeColor(
+                          transaction.type,
+                          transaction.direction,
+                        ) as any
+                      }
                       size="small"
                     />
                   </TableCell>

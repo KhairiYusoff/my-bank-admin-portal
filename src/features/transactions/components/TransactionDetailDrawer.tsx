@@ -10,6 +10,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import StatusChip from "@/components/shared/StatusChip";
+import {
+  getTransactionTypeColor,
+  getTransactionTypeLabel,
+} from "@/features/transactions/utils/transactionColors";
 import { formatDateTime } from "@/utils/formatters";
 import type { Transaction } from "../types";
 
@@ -22,24 +26,6 @@ const DASH = "—";
 const DRAWER_WIDTH = 480;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-
-function getDirectionLabel(tx: Transaction): string {
-  if (tx.type === "transfer") {
-    return tx.direction === "debit" ? "TRANSFER SENT" : "TRANSFER RECEIVED";
-  }
-  if (tx.type === "deposit") return "DEPOSIT";
-  if (tx.type === "airdrop") return "AIRDROP";
-  return "WITHDRAWAL";
-}
-
-function getDirectionColor(
-  tx: Transaction,
-): "primary" | "success" | "error" | "warning" | "info" {
-  if (tx.type === "withdrawal") return "error";
-  if (tx.type === "transfer" && tx.direction === "debit") return "info";
-  if (tx.type === "airdrop") return "warning";
-  return "success";
-}
 
 function getAmountPrefix(tx: Transaction): string {
   const isOutgoing =
@@ -134,8 +120,14 @@ const TransactionDetailDrawer: React.FC<TransactionDetailDrawerProps> = ({
           {/* Header */}
           <Box>
             <Chip
-              label={getDirectionLabel(transaction)}
-              color={getDirectionColor(transaction)}
+              label={getTransactionTypeLabel(
+                transaction.type,
+                transaction.direction,
+              )}
+              color={getTransactionTypeColor(
+                transaction.type,
+                transaction.direction,
+              )}
               size="small"
               sx={{ mb: 1, fontWeight: 700, letterSpacing: 0.5 }}
             />
