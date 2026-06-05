@@ -4,11 +4,13 @@ import {
   Alert,
   Box,
   Button,
+  Chip,
   CircularProgress,
   Snackbar,
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 import { useAppSelector } from "@/app/hooks";
 import { DetailSection } from "@/components/shared";
@@ -166,9 +168,27 @@ const UserDetailPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700}>
             {customer.name}
           </Typography>
-          <Box sx={{ display: "flex", gap: 1, mt: 1, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              mt: 1,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
             <StatusChip status={customer.status} />
             <StatusChip status={customer.applicationStatus} />
+            {customer.isVerified && (
+              <Chip
+                icon={<VerifiedIcon sx={{ fontSize: 16 }} />}
+                label="Verified"
+                size="small"
+                color="primary"
+                variant="outlined"
+                sx={{ fontWeight: 600, borderWidth: 2 }}
+              />
+            )}
             <Typography
               variant="caption"
               sx={{

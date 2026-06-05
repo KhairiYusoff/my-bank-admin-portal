@@ -24,6 +24,8 @@ import {
   paperWrapperStyles,
 } from "@/components/shared/TableStyles";
 import StatusChip from "@/components/shared/StatusChip";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const UsersList: React.FC = () => {
   const navigate = useNavigate();
@@ -88,7 +90,13 @@ const UsersList: React.FC = () => {
                     <TableCell>
                       <StatusChip status={user.status} />
                     </TableCell>
-                    <TableCell>{user.isVerified ? "Yes" : "No"}</TableCell>
+                    <TableCell>
+                      {user.isVerified ? (
+                        <CheckCircleIcon color="success" />
+                      ) : (
+                        <CancelIcon color="error" />
+                      )}
+                    </TableCell>
                     <TableCell>
                       {user.createdAt ? formatDate(user.createdAt) : "N/A"}
                     </TableCell>
