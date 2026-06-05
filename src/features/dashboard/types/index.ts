@@ -17,29 +17,10 @@ export interface DashboardFinancials {
   totalPortfolioBalance: number;
 }
 
-export interface DashboardRecentApplication {
-  _id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-}
-
-export interface DashboardRecentTransaction {
-  _id: string;
-  type: string;
-  amount: number;
-  status: string;
-  date: string;
-  direction?: "debit" | "credit";
-  account?: { accountNumber: string };
-}
-
 export interface DashboardSummary {
   counts: DashboardCounts;
   attention: DashboardAttention;
   financials: DashboardFinancials;
-  recentPendingApplications: DashboardRecentApplication[];
-  recentTransactions: DashboardRecentTransaction[];
 }
 
 export interface DashboardSummaryResponse {
