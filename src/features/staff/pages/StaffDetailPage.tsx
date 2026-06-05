@@ -254,14 +254,6 @@ const StaffDetailPage: React.FC = () => {
               { label: "Role", value: staff.role },
               { label: "Account Status", value: staff.status },
               { label: "Verified", value: boolToYesNo(staff.isVerified) },
-              {
-                label: "Profile Complete",
-                value: boolToYesNo(staff.isProfileComplete),
-              },
-              {
-                label: "First Time Login",
-                value: boolToYesNo(staff.isFirstTime),
-              },
               { label: "Member Since", value: safeFormatDate(staff.createdAt) },
               { label: "Last Updated", value: safeFormatDate(staff.updatedAt) },
               {

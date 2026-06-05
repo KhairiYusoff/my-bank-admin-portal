@@ -26,8 +26,6 @@ import {
 } from "@/components/shared/TableStyles";
 import StatusChip from "@/components/shared/StatusChip";
 import { formatDate } from "@/utils/formatters";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 
 const StaffPage: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -97,8 +95,6 @@ const StaffPage: React.FC = () => {
                   <TableCell width="22%">Email</TableCell>
                   <TableCell width="12%">Role</TableCell>
                   <TableCell width="14%">Account Status</TableCell>
-                  <TableCell width="8%">Verified</TableCell>
-                  <TableCell width="8%">Profile</TableCell>
                   <TableCell width="10%">Created At</TableCell>
                   <TableCell width="8%">Actions</TableCell>
                 </TableRow>
@@ -111,20 +107,6 @@ const StaffPage: React.FC = () => {
                     <TableCell>{member.role}</TableCell>
                     <TableCell>
                       <StatusChip status={member.status} />
-                    </TableCell>
-                    <TableCell>
-                      {member.isVerified ? (
-                        <CheckCircleIcon color="success" />
-                      ) : (
-                        <CancelIcon color="error" />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {member.isProfileComplete ? (
-                        <CheckCircleIcon color="success" />
-                      ) : (
-                        <CancelIcon color="error" />
-                      )}
                     </TableCell>
                     <TableCell>{formatDate(member.createdAt)}</TableCell>
                     <TableCell>
