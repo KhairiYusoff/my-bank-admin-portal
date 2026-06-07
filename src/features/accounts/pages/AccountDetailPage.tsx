@@ -18,6 +18,7 @@ import type { Account } from "@/features/accounts/types";
 import StatusChip from "@/components/shared/StatusChip";
 import { DetailSection } from "@/components/shared";
 import ChangeStatusModal from "@/features/users/components/ChangeStatusModal";
+import SetOverdraftLimitDialog from "@/features/accounts/components/SetOverdraftLimitDialog";
 import type { UserStatus, User } from "@/features/users/types";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 
@@ -42,6 +43,7 @@ const AccountDetailPage: React.FC = () => {
     useUpdateAccountStatusMutation();
 
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [overdraftModalOpen, setOverdraftModalOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -220,7 +222,21 @@ const AccountDetailPage: React.FC = () => {
               },
               {
                 label: "Overdraft Limit",
-                value: formatCurrency(account.overdraftLimit, account.currency),
+                value: (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    {formatCurrency(account.overdraftLimit, account.currency)}
+                    {(currentUserRole === "admin" || currentUserRole === "banker") &&
+                      (account.accountType === "current" || account.accountType === "business") && (
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => setOverdraftModalOpen(true)}
+                        >
+                          Set Limit
+                        </Button>
+                      )}
+                  </Box>
+                ),
               },
               {
                 label: "Interest Rate",
@@ -286,6 +302,19 @@ const AccountDetailPage: React.FC = () => {
         isLoading={isUpdating}
         onConfirm={handleStatusConfirm}
         onClose={() => setStatusModalOpen(false)}
+      />
+
+      {/* Set Overdraft Limit Dialog */}
+      <SetOverdraftLimitDialog
+        open={overdraftModalOpen}
+        onClose={() => setOverdraftModalOpen(false)}
+        account={account}
+        onSuccess={(message) =>
+          setSnackbar({ open: true, message, severity: "success" })
+        }
+        onError={(message) =>
+          setSnackbar({ open: true, message, severity: "error" })
+        }
       />
 
       <Snackbar

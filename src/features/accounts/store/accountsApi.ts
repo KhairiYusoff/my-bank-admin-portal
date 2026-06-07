@@ -56,6 +56,20 @@ export const accountsApi = api.injectEndpoints({
         "Account",
       ],
     }),
+    setOverdraftLimit: builder.mutation<
+      { success: boolean; message: string; data: { accountNumber: string; overdraftLimit: number } },
+      { accountNumber: string; overdraftLimit: number }
+    >({
+      query: ({ accountNumber, overdraftLimit }) => ({
+        url: `/accounts/${accountNumber}/overdraft-limit`,
+        method: "PATCH",
+        body: { overdraftLimit },
+      }),
+      invalidatesTags: (_result, _error, { accountNumber }) => [
+        { type: "Account", id: accountNumber },
+        "Account",
+      ],
+    }),
   }),
   overrideExisting: false,
 });
@@ -65,4 +79,5 @@ export const {
   useAirdropMutation,
   useGetAccountByNumberQuery,
   useUpdateAccountStatusMutation,
+  useSetOverdraftLimitMutation,
 } = accountsApi;
