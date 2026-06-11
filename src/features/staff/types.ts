@@ -15,7 +15,6 @@ export interface StaffMember {
   isProfileComplete: boolean;
   isFirstTime?: boolean;
   preferences?: {
-    theme?: string;
     language?: string;
     notifications?: boolean;
   };

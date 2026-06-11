@@ -277,7 +277,6 @@ const StaffDetailPage: React.FC = () => {
           <DetailSection
             title="Preferences"
             rows={[
-              { label: "Theme", value: staff.preferences?.theme },
               { label: "Language", value: staff.preferences?.language },
               {
                 label: "Notifications",

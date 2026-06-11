@@ -1,9 +1,6 @@
 import { BaseResponse } from '@/features/users/types';
 
-export type ThemePreference = 'light' | 'dark' | 'system';
-
 export interface UserPreferences {
-  theme: ThemePreference;
   language: string;
   timezone: string;
   dateFormat: string;
@@ -15,7 +12,6 @@ export interface UserPreferences {
 }
 
 export interface UpdatePreferencesRequest {
-  theme?: ThemePreference;
   language?: string;
   timezone?: string;
   dateFormat?: string;

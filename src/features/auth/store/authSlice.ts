@@ -6,6 +6,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  mustChangePassword?: boolean;
 }
 
 export interface AuthState {
@@ -53,6 +54,11 @@ const authSlice = createSlice({
     updateActivity: (state) => {
       state.lastActivity = Date.now();
     },
+    setPasswordChanged: (state) => {
+      if (state.user) {
+        state.user.mustChangePassword = false;
+      }
+    },
     logout: (state) => {
       state.token = null;
       state.user = null;
@@ -89,7 +95,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, updateActivity } = authSlice.actions;
+export const { setCredentials, logout, updateActivity, setPasswordChanged } = authSlice.actions;
 
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;

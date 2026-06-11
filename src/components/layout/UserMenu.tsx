@@ -218,7 +218,6 @@ const UserMenu: React.FC = () => {
             open={isPreferencesOpen}
             onClose={handleCloseDialog(setPreferencesOpen)}
             initialData={{
-              theme: user.preferences?.theme || 'light',
               language: user.preferences?.language || 'en',
               notifications: user.preferences?.notifications || { email: true, push: true, sms: false },
               timezone: 'Asia/Kuala_Lumpur',

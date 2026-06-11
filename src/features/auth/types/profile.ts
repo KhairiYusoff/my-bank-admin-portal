@@ -7,7 +7,6 @@ export interface UserProfile {
   isVerified: boolean;
   role: string;
   preferences: {
-    theme: string;
     language: string;
     notifications: boolean;
   };

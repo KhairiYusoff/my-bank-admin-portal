@@ -29,7 +29,6 @@ import { useUpdatePreferencesMutation, UpdatePreferencesRequest } from '@/featur
 
 // Define validation schema
 const preferencesSchema = yup.object().shape({
-  theme: yup.string().oneOf(['light', 'dark', 'system']).required('Theme is required'),
   language: yup.string().required('Language is required'),
   timezone: yup.string().required('Timezone is required'),
   dateFormat: yup.string().required('Date format is required'),
@@ -49,12 +48,6 @@ interface PreferencesFormProps {
 }
 
 // Available options
-const themeOptions = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'system', label: 'System Default' },
-];
-
 const languageOptions = [
   { value: 'en', label: 'English' },
   { value: 'ms', label: 'Bahasa Melayu' },
@@ -100,7 +93,6 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
   } = useForm<FormData>({
     resolver: yupResolver(preferencesSchema),
     defaultValues: {
-      theme: initialData.theme || 'light',
       language: initialData.language || 'en',
       timezone: initialData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
       dateFormat: initialData.dateFormat || 'MM/dd/yyyy',
@@ -117,7 +109,6 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
   useEffect(() => {
     if (open) {
       reset({
-        theme: initialData.theme || 'light',
         language: initialData.language || 'en',
         timezone: initialData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
         dateFormat: initialData.dateFormat || 'MM/dd/yyyy',
@@ -181,37 +172,6 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
                 Display
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="theme"
-                    control={control}
-                    render={({ field }) => (
-                      <FormControl 
-                        fullWidth 
-                        margin="normal"
-                        error={!!errors.theme}
-                      >
-                        <InputLabel id="theme-label">Theme</InputLabel>
-                        <Select
-                          {...field}
-                          labelId="theme-label"
-                          label="Theme"
-                          disabled={isLoading}
-                        >
-                          {themeOptions.map(option => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        {errors.theme && (
-                          <FormHelperText>{errors.theme.message}</FormHelperText>
-                        )}
-                      </FormControl>
-                    )}
-                  />
-                </Grid>
-
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="language"

@@ -7,7 +7,6 @@ export interface UserProfile {
   phoneNumber?: string;
   avatar?: string;
   preferences: {
-    theme: string;
     language: string;
     notifications: boolean;
   };
@@ -34,7 +33,6 @@ export interface ChangePasswordRequest {
 }
 
 export interface UpdatePreferencesRequest {
-  theme: string;
   language: string;
   notifications: boolean;
 }

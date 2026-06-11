@@ -18,6 +18,7 @@ import LoadingSpinner from "./components/shared/LoadingSpinner";
 
 // Lazy load components for better performance
 const Login = lazy(() => import("./features/auth/pages/LoginForm"));
+const SecurityHandshake = lazy(() => import("./features/auth/pages/SecurityHandshake"));
 
 // Wrapper component to handle Suspense for route elements
 const RouteElement = ({ element }: { element: React.ReactNode }) => (
@@ -27,6 +28,7 @@ const RouteElement = ({ element }: { element: React.ReactNode }) => (
 function App() {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector((state) => state.auth.user);
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
@@ -35,6 +37,25 @@ function App() {
   // Render login or main app based on auth status
   const renderContent = () => {
     if (isAuthenticated) {
+      if (user?.mustChangePassword) {
+        return (
+          <Routes>
+            <Route
+              path="/security-handshake"
+              element={
+                <Suspense fallback={<LoadingSpinner fullScreen />}>
+                  <SecurityHandshake />
+                </Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={<Navigate to="/security-handshake" replace />}
+            />
+          </Routes>
+        );
+      }
+
       return (
         <>
           <Routes>

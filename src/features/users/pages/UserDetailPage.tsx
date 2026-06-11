@@ -267,7 +267,6 @@ const UserDetailPage: React.FC = () => {
           <DetailSection
             title="Preferences"
             rows={[
-              { label: "Theme", value: customer.preferences?.theme },
               { label: "Language", value: customer.preferences?.language },
               {
                 label: "Notifications",
