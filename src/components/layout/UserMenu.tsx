@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -10,11 +10,10 @@ import {
   MenuItem,
   Tooltip,
   Typography,
-  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Person as PersonIcon,
   Settings as SettingsIcon,
@@ -22,12 +21,17 @@ import {
   Close as CloseIcon,
   Edit as EditIcon,
   Lock as LockIcon,
-} from '@mui/icons-material';
-import { useAppDispatch } from '@/app/hooks';
-import { logout } from '@/features/auth/store/authSlice';
-import { useGetProfileQuery } from '@/features/auth/store/authApi';
-import { UserProfile } from '@/types/user';
-import { Profile, ProfileEditForm, ChangePasswordForm, PreferencesForm } from '@/features/profile/components';
+} from "@mui/icons-material";
+import { useAppDispatch } from "@/app/hooks";
+import { logout } from "@/features/auth/store/authSlice";
+import { useGetProfileQuery } from "@/features/auth/store/authApi";
+import { UserProfile } from "@/features/auth/types/profile";
+import {
+  Profile,
+  ProfileEditForm,
+  ChangePasswordForm,
+  PreferencesForm,
+} from "@/features/profile/components";
 
 const UserMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -39,7 +43,7 @@ const UserMenu: React.FC = () => {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: profileResponse, isLoading, refetch } = useGetProfileQuery();
+  const { data: profileResponse, refetch } = useGetProfileQuery();
   const user = profileResponse?.data as UserProfile | undefined;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -50,14 +54,16 @@ const UserMenu: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleOpen = (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
-    setter(true);
-    handleClose();
-  };
+  const handleOpen =
+    (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
+      setter(true);
+      handleClose();
+    };
 
-  const handleCloseDialog = (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
-    setter(false);
-  };
+  const handleCloseDialog =
+    (setter: React.Dispatch<React.SetStateAction<boolean>>) => () => {
+      setter(false);
+    };
 
   const handleProfileUpdated = () => {
     refetch();
@@ -67,7 +73,7 @@ const UserMenu: React.FC = () => {
   const handleLogout = () => {
     handleClose();
     dispatch(logout());
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -77,21 +83,13 @@ const UserMenu: React.FC = () => {
           onClick={handleClick}
           size="small"
           sx={{ ml: 2 }}
-          aria-controls={open ? 'account-menu' : undefined}
+          aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
+          aria-expanded={open ? "true" : undefined}
         >
-          {isLoading ? (
-            <CircularProgress size={24} />
-          ) : (
-            <Avatar
-              src={user?.avatarUrl}
-              sx={{ width: 32, height: 32 }}
-              alt={user?.name || 'User'}
-            >
-              {user?.name?.[0]?.toUpperCase()}
-            </Avatar>
-          )}
+          <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.main" }}>
+            {user?.name?.[0]?.toUpperCase()}
+          </Avatar>
         </IconButton>
       </Tooltip>
       <Menu
@@ -104,38 +102,38 @@ const UserMenu: React.FC = () => {
           elevation: 2,
           sx: {
             minWidth: 220,
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
             mt: 1.5,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            '&:before': {
+            "&:before": {
               content: '""',
-              display: 'block',
-              position: 'absolute',
+              display: "block",
+              position: "absolute",
               top: 0,
               right: 14,
               width: 10,
               height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <Box sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.name || 'User'}
+            {user?.name || "User"}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
-            {user?.email || ''}
+            {user?.email || ""}
           </Typography>
         </Box>
         <Divider sx={{ my: 1 }} />
@@ -172,14 +170,19 @@ const UserMenu: React.FC = () => {
         </MenuItem>
       </Menu>
 
-      <Dialog open={isProfileOpen} onClose={handleCloseDialog(setProfileOpen)} fullWidth maxWidth="lg">
+      <Dialog
+        open={isProfileOpen}
+        onClose={handleCloseDialog(setProfileOpen)}
+        fullWidth
+        maxWidth="lg"
+      >
         <DialogTitle>
           My Profile
           <IconButton
             aria-label="close"
             onClick={handleCloseDialog(setProfileOpen)}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -199,14 +202,14 @@ const UserMenu: React.FC = () => {
             open={isEditDialogOpen}
             onClose={handleCloseDialog(setEditDialogOpen)}
             initialData={{
-              name: user.name || '',
-              email: user.email || '',
-              phoneNumber: user.phone || '',
-              address: user.address || '',
-              city: '', // Assuming city is not on user object, add if it is
-              state: '', // Assuming state is not on user object, add if it is
-              postalCode: '', // Assuming postalCode is not on user object, add if it is
-              country: '', // Assuming country is not on user object, add if it is
+              name: user.name || "",
+              email: user.email || "",
+              phoneNumber: user.phoneNumber || "",
+              address: user.address || "",
+              city: "", // Assuming city is not on user object, add if it is
+              state: "", // Assuming state is not on user object, add if it is
+              postalCode: "", // Assuming postalCode is not on user object, add if it is
+              country: "", // Assuming country is not on user object, add if it is
             }}
             onSuccess={handleProfileUpdated}
           />
@@ -218,10 +221,14 @@ const UserMenu: React.FC = () => {
             open={isPreferencesOpen}
             onClose={handleCloseDialog(setPreferencesOpen)}
             initialData={{
-              language: user.preferences?.language || 'en',
-              notifications: user.preferences?.notifications || { email: true, push: true, sms: false },
-              timezone: 'Asia/Kuala_Lumpur',
-              dateFormat: 'MM/dd/yyyy',
+              language: user.preferences?.language || "en",
+              notifications: user.preferences?.notifications || {
+                email: true,
+                push: true,
+                sms: false,
+              },
+              timezone: "Asia/Kuala_Lumpur",
+              dateFormat: "MM/dd/yyyy",
             }}
           />
         </>

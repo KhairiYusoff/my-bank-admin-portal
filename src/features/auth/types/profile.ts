@@ -1,4 +1,4 @@
-import { BaseResponse } from '@/features/users/types';
+import { BaseResponse } from "@/features/users/types";
 
 export interface UserProfile {
   _id: string;
