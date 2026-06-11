@@ -1,68 +1,124 @@
-import React from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Drawer, 
-  AppBar, 
-  Toolbar, 
-  List, 
-  ListItem, 
-  ListItemButton, 
-  ListItemText, 
+import React from "react";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   ListItemIcon,
-  Typography, 
-  CssBaseline, 
-  Box, 
-  Divider 
-} from '@mui/material';
-import { LogoutButton } from '@/features/auth';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import AirIcon from '@mui/icons-material/Air';
-import PersonIcon from '@mui/icons-material/Person';
-import LogoutIcon from '@mui/icons-material/Logout';
-import UserMenu from './UserMenu';
+  Typography,
+  CssBaseline,
+  Box,
+  Divider,
+} from "@mui/material";
+import { LogoutButton } from "@/features/auth";
+import { useAppSelector } from "@/app/hooks";
+import { selectCurrentUser } from "@/features/auth/store/authSlice";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import AirIcon from "@mui/icons-material/Air";
+import LogoutIcon from "@mui/icons-material/Logout";
+import UserMenu from "./UserMenu";
 
 const drawerWidth = 240;
 
-const navItems: { label: string; path: string; icon: JSX.Element }[] = [
-  { label: 'Admin Dashboard', path: '/', icon: <DashboardIcon /> },
-  { label: 'User Management', path: '/users', icon: <PeopleIcon /> },
-  { label: 'Staff Management', path: '/staff', icon: <PersonAddIcon /> },
-  { label: 'Account Management', path: '/accounts', icon: <AccountBalanceIcon /> },
-  { label: 'Applications', path: '/pending-applications', icon: <PendingActionsIcon /> },
-  { label: 'System Audit Logs', path: '/audit', icon: <AssessmentIcon /> },
-  { label: 'Transaction History', path: '/transactions', icon: <SwapHorizIcon /> },
-  { label: 'Airdrop Management', path: '/airdrop', icon: <AirIcon /> },
+const navItems: {
+  label: string;
+  path: string;
+  icon: JSX.Element;
+  roles: string[];
+}[] = [
+  {
+    label: "Admin Dashboard",
+    path: "/dashboard",
+    icon: <DashboardIcon />,
+    roles: ["admin", "banker", "auditor"],
+  },
+  {
+    label: "User Management",
+    path: "/users",
+    icon: <PeopleIcon />,
+    roles: ["admin", "banker", "auditor"],
+  },
+  {
+    label: "Staff Management",
+    path: "/staff",
+    icon: <PersonAddIcon />,
+    roles: ["admin"],
+  },
+  {
+    label: "Account Management",
+    path: "/accounts",
+    icon: <AccountBalanceIcon />,
+    roles: ["admin", "banker", "auditor"],
+  },
+  {
+    label: "Applications (Pending)",
+    path: "/pending-applications",
+    icon: <PendingActionsIcon />,
+    roles: ["admin", "banker", "auditor"],
+  },
+  {
+    label: "System Audit Logs",
+    path: "/audit",
+    icon: <AssessmentIcon />,
+    roles: ["admin", "auditor"],
+  },
+  {
+    label: "Transaction History",
+    path: "/transactions",
+    icon: <SwapHorizIcon />,
+    roles: ["admin", "banker", "auditor"],
+  },
+  {
+    label: "Airdrop Management",
+    path: "/airdrop",
+    icon: <AirIcon />,
+    roles: ["admin"],
+  },
 ];
 
 const AdminLayout: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const user = useAppSelector(selectCurrentUser);
+  const filteredNavItems = navItems.filter(
+    (item) => user && item.roles.includes(user.role),
+  );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: '#1976d2',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          backgroundColor: "#1976d2",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         }}
       >
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, gap: 2 }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", flexGrow: 1, gap: 2 }}
+          >
             <img
               src="/bank-logo.svg"
               alt="My Bank Admin"
               style={{ width: 32, height: 32 }}
             />
-            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 500 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ fontWeight: 500 }}
+            >
               My Bank Admin
             </Typography>
           </Box>
@@ -74,13 +130,22 @@ const AdminLayout: React.FC = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
-          <List sx={{ flex: 1, overflow: 'auto', py: 2 }}>
-            {navItems.map(({ label, path, icon }) => (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "calc(100vh - 64px)",
+          }}
+        >
+          <List sx={{ flex: 1, overflow: "auto", py: 2 }}>
+            {filteredNavItems.map(({ label, path, icon }) => (
               <ListItem key={label} disablePadding>
                 <ListItemButton
                   component={Link}
@@ -89,21 +154,24 @@ const AdminLayout: React.FC = () => {
                   sx={{
                     borderRadius: 1,
                     mx: 1,
-                    '&.Mui-selected': {
+                    "&.Mui-selected": {
                       backgroundColor: (theme) => theme.palette.action.selected,
-                      '&:hover': {
-                        backgroundColor: (theme) => theme.palette.action.hover
-                      }
+                      "&:hover": {
+                        backgroundColor: (theme) => theme.palette.action.hover,
+                      },
                     },
-                    '&:hover': {
-                      backgroundColor: (theme) => theme.palette.action.hover
-                    }
+                    "&:hover": {
+                      backgroundColor: (theme) => theme.palette.action.hover,
+                    },
                   }}
                 >
                   <ListItemIcon
                     sx={{
-                      color: location.pathname === path ? (theme) => theme.palette.primary.main : (theme) => theme.palette.text.secondary,
-                      minWidth: 40
+                      color:
+                        location.pathname === path
+                          ? (theme) => theme.palette.primary.main
+                          : (theme) => theme.palette.text.secondary,
+                      minWidth: 40,
                     }}
                   >
                     {icon}
@@ -111,26 +179,26 @@ const AdminLayout: React.FC = () => {
                   <ListItemText
                     primary={label}
                     sx={{
-                      '& .MuiTypography-root': {
-                        fontWeight: location.pathname === path ? 500 : 400
-                      }
+                      "& .MuiTypography-root": {
+                        fontWeight: location.pathname === path ? 500 : 400,
+                      },
                     }}
                   />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
-          <Box sx={{ mt: 'auto', mb: 2 }}>
+          <Box sx={{ mt: "auto", mb: 2 }}>
             <Divider sx={{ my: 1 }} />
             <ListItem disablePadding>
               <LogoutButton
                 sx={{
-                  width: '100%',
-                  justifyContent: 'flex-start',
+                  width: "100%",
+                  justifyContent: "flex-start",
                   py: 2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                  }
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                  },
                 }}
                 startIcon={<LogoutIcon />}
               />

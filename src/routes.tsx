@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
-import { RouteObject, useNavigate } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
+import RoleGuard from "@/features/auth/components/RoleGuard";
 
 // Lazy load route components
 const Dashboard = lazy(
@@ -31,10 +32,12 @@ const StaffDetailPage = lazy(
   () => import("@/features/staff/pages/StaffDetailPage"),
 );
 const NotFoundPage = lazy(() => import("@/components/shared/NotFoundPage"));
+const ForbiddenPage = lazy(() => import("@/components/shared/ForbiddenPage"));
 
 // Extend RouteObject to include requiresAuth
 interface AppRoute extends Omit<RouteObject, "children"> {
   requiresAuth?: boolean;
+  allowedRoles?: string[];
   children?: AppRoute[];
 }
 
@@ -43,29 +46,57 @@ const createRoute = (
   path: string,
   element: React.ReactNode,
   requiresAuth = true,
+  allowedRoles?: string[],
 ): AppRoute => ({
   path,
-  element,
+  element: allowedRoles ? (
+    <RoleGuard allowedRoles={allowedRoles}>{element}</RoleGuard>
+  ) : (
+    element
+  ),
   requiresAuth,
 });
 
 // Define routes configuration
 export const routes: AppRoute[] = [
   createRoute("/dashboard", <Dashboard />),
-  createRoute("/users", <UsersList />),
-  createRoute("/users/:id", <UserDetailPage />),
-  createRoute("/pending-applications", <PendingApplications />),
-  createRoute("/audit", <AuditLogPage />),
-  createRoute("/transactions", <TransactionsList />),
-  createRoute("/accounts", <AccountsList />),
-  createRoute("/accounts/:accountNumber", <AccountDetailPage />),
+  createRoute("/users", <UsersList />, true, ["admin", "banker", "auditor"]),
+  createRoute("/users/:id", <UserDetailPage />, true, [
+    "admin",
+    "banker",
+    "auditor",
+  ]),
+  createRoute("/pending-applications", <PendingApplications />, true, [
+    "admin",
+    "banker",
+    "auditor",
+  ]),
+  createRoute("/audit", <AuditLogPage />, true, ["admin", "auditor"]),
+  createRoute("/transactions", <TransactionsList />, true, [
+    "admin",
+    "banker",
+    "auditor",
+  ]),
+  createRoute("/accounts", <AccountsList />, true, [
+    "admin",
+    "banker",
+    "auditor",
+  ]),
+  createRoute("/accounts/:accountNumber", <AccountDetailPage />, true, [
+    "admin",
+    "banker",
+    "auditor",
+  ]),
   createRoute(
     "/accounts/:accountNumber/transactions",
     <AccountTransactionsPage />,
+    true,
+    ["admin", "banker", "auditor"],
   ),
-  createRoute("/airdrop", <Airdrop />),
-  createRoute("/staff", <StaffPage />),
-  createRoute("/staff/:id", <StaffDetailPage />),
+  createRoute("/airdrop", <Airdrop />, true, ["admin"]),
+  createRoute("/staff", <StaffPage />, true, ["admin"]),
+  createRoute("/staff/:id", <StaffDetailPage />, true, ["admin"]),
+  createRoute("/forbidden", <ForbiddenPage />, false),
   createRoute("*", <NotFoundPage />, false),
 ];
 

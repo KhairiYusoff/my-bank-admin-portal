@@ -117,14 +117,16 @@ const DashboardPage: React.FC = () => {
               iconColor="#2e7d32"
               to="/accounts"
             />
-            <KpiCard
-              label="Staff Members"
-              count={counts?.staff}
-              sublabel="Admins & bankers"
-              icon={<StaffIcon />}
-              iconColor="#ed6c02"
-              to="/staff"
-            />
+            {user?.role !== "banker" && (
+              <KpiCard
+                label="Staff Members"
+                count={counts?.staff}
+                sublabel="Admins & bankers"
+                icon={<StaffIcon />}
+                iconColor="#ed6c02"
+                to="/staff"
+              />
+            )}
             <KpiCard
               label="Transactions Today"
               count={counts?.transactionsToday}
