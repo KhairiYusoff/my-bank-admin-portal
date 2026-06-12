@@ -6,6 +6,9 @@ interface StatusChipProps {
   status: string;
 }
 
+const formatStatusLabel = (status: string) =>
+  status.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+
 const getStatusColor = (status: string): ChipProps["color"] => {
   if (!status) return "default";
   switch (status.toLowerCase()) {
@@ -19,11 +22,15 @@ const getStatusColor = (status: string): ChipProps["color"] => {
       return "info";
     case "inactive":
     case "pending":
+    case "pending_approval":
+    case "pending_closure":
+    case "dormant":
       return "warning";
     case "suspended":
     case "rejected":
     case "failed":
     case "error":
+    case "closed":
       return "error";
     default:
       return "default";
@@ -33,7 +40,7 @@ const getStatusColor = (status: string): ChipProps["color"] => {
 const StatusChip: React.FC<StatusChipProps> = ({ status }) => {
   return (
     <Chip
-      label={status ? status.charAt(0).toUpperCase() + status.slice(1) : "N/A"}
+      label={status ? formatStatusLabel(status) : "N/A"}
       color={getStatusColor(status)}
       size="small"
       sx={{ minWidth: "80px", textTransform: "capitalize" }}

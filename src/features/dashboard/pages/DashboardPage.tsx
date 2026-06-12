@@ -213,7 +213,7 @@ const DashboardPage: React.FC = () => {
               count={attention?.dormantAccounts}
               icon={<DormantIcon />}
               accentColor="#546e7a"
-              to="/accounts?status=Dormant"
+              to="/accounts?status=dormant"
             />
           </Box>
         </>

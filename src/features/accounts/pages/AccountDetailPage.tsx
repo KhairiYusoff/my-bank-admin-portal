@@ -17,9 +17,11 @@ import {
 import type { Account } from "@/features/accounts/types";
 import StatusChip from "@/components/shared/StatusChip";
 import { DetailSection } from "@/components/shared";
-import ChangeStatusModal from "@/features/users/components/ChangeStatusModal";
-import SetOverdraftLimitDialog from "@/features/accounts/components/SetOverdraftLimitDialog";
-import type { UserStatus, User } from "@/features/users/types";
+import {
+  ChangeAccountStatusModal,
+  SetOverdraftLimitDialog,
+} from "@/features/accounts/components";
+import type { AccountStatus } from "@/features/accounts/types";
 import { formatDate, formatCurrency } from "@/utils/formatters";
 
 const AccountDetailPage: React.FC = () => {
@@ -81,7 +83,7 @@ const AccountDetailPage: React.FC = () => {
 
   const safeFormatDate = (val?: string) => (val ? formatDate(val) : undefined);
 
-  const handleStatusConfirm = async (newStatus: UserStatus) => {
+  const handleStatusConfirm = async (newStatus: AccountStatus) => {
     try {
       await updateStatus({
         accountNumber: account.accountNumber,
@@ -166,7 +168,7 @@ const AccountDetailPage: React.FC = () => {
             <Button
               variant="contained"
               size="small"
-              disabled={account.status === "Closed"}
+              disabled={account.status === "closed"}
               onClick={() => setStatusModalOpen(true)}
             >
               Manage Status
@@ -296,9 +298,9 @@ const AccountDetailPage: React.FC = () => {
       </Box>
 
       {/* Manage Status Modal */}
-      <ChangeStatusModal
+      <ChangeAccountStatusModal
         open={statusModalOpen}
-        user={account as unknown as User}
+        account={account}
         isLoading={isUpdating}
         onConfirm={handleStatusConfirm}
         onClose={() => setStatusModalOpen(false)}

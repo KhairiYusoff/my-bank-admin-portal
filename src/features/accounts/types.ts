@@ -1,5 +1,8 @@
 import { BaseResponse } from "@/features/users/types";
 
+/** Statuses bankers may set via PATCH /accounts/:accountNumber/status */
+export type AccountStatus = "active" | "dormant" | "suspended" | "closed";
+
 export interface AccountUser {
   _id: string;
   name: string;
@@ -36,7 +39,7 @@ export interface GetAccountByNumberResponse extends BaseResponse {
 }
 
 export interface UpdateAccountStatusRequest {
-  status: string;
+  status: AccountStatus;
 }
 
 export interface UpdateAccountStatusResponse extends BaseResponse {
