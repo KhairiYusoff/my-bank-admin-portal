@@ -1,6 +1,6 @@
 import { BaseResponse } from "@/features/users/types";
 
-export type StaffRole = "admin" | "banker";
+export type StaffRole = "admin" | "banker" | "auditor";
 export type StaffStatus = "active" | "suspended" | "terminated";
 
 export interface StaffMember {

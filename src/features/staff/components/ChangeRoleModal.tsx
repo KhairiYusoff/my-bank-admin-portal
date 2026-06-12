@@ -77,6 +77,12 @@ const ChangeRoleModal: React.FC<ChangeRoleModalProps> = ({
               label="Admin"
               disabled={currentRole === "admin"}
             />
+            <FormControlLabel
+              value="auditor"
+              control={<Radio />}
+              label="Auditor"
+              disabled={currentRole === "auditor"}
+            />
           </RadioGroup>
         </FormControl>
 

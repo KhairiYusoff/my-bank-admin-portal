@@ -27,7 +27,7 @@ const staffSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref('password'), undefined], 'Passwords must match')
     .required('Please confirm your password'),
-  role: yup.string().oneOf(['admin', 'banker']).required('Role is required'),
+  role: yup.string().oneOf(['admin', 'banker', 'auditor']).required('Role is required'),
 });
 
 interface CreateStaffFormData {
@@ -35,7 +35,7 @@ interface CreateStaffFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  role: 'admin' | 'banker';
+  role: 'admin' | 'banker' | 'auditor';
 }
 
 export interface CreateStaffFormProps {
@@ -155,6 +155,7 @@ export const CreateStaffForm: React.FC<CreateStaffFormProps> = ({
               <Select {...field} label="Role">
                 <MenuItem value="banker">Banker</MenuItem>
                 <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="auditor">Auditor</MenuItem>
               </Select>
               {errors.role && (
                 <FormHelperText>{errors.role.message}</FormHelperText>

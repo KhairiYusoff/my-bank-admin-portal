@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useCreateStaffMutation } from "@/features/staff/store/staffApi";
-import type { CreateStaffRequest } from "@/features/admin/store/adminApi";
+import type { CreateStaffRequest } from "@/features/staff/types";
 import { CreateStaffForm } from '@/components/admin/CreateStaffForm';
 
 interface CreateStaffModalProps {
