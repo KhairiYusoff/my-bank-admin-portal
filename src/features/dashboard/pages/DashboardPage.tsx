@@ -121,7 +121,7 @@ const DashboardPage: React.FC = () => {
               <KpiCard
                 label="Staff Members"
                 count={counts?.staff}
-                sublabel="Admins & bankers"
+                sublabel="Admins, bankers & auditors"
                 icon={<StaffIcon />}
                 iconColor="#ed6c02"
                 to="/staff"
