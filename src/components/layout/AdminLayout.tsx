@@ -61,8 +61,8 @@ const navItems: {
     roles: ["admin", "banker", "auditor"],
   },
   {
-    label: "Applications (Pending)",
-    path: "/pending-applications",
+    label: "Approval Hub",
+    path: "/approvals",
     icon: <PendingActionsIcon />,
     roles: ["admin", "banker", "auditor"],
   },

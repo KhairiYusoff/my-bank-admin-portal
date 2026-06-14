@@ -10,8 +10,8 @@ const UsersList = lazy(() => import("@/features/users/pages/UsersList"));
 const UserDetailPage = lazy(
   () => import("@/features/users/pages/UserDetailPage"),
 );
-const PendingApplications = lazy(
-  () => import("@/features/admin/components/PendingApplications"),
+const ApprovalHub = lazy(
+  () => import("@/features/accounts/pages/ApprovalHub"),
 );
 const AuditLogPage = lazy(() => import("@/features/audit/pages/AuditLogPage"));
 const TransactionsList = lazy(
@@ -66,7 +66,7 @@ export const routes: AppRoute[] = [
     "banker",
     "auditor",
   ]),
-  createRoute("/pending-applications", <PendingApplications />, true, [
+  createRoute("/approvals", <ApprovalHub />, true, [
     "admin",
     "banker",
     "auditor",

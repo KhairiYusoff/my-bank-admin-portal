@@ -1,4 +1,5 @@
 import { api } from "@/app/store/apiSlice";
+import { BaseResponse } from "@/features/users/types";
 import type {
   AccountsResponse,
   AccountsQueryParams,
@@ -7,7 +8,21 @@ import type {
   GetAccountByNumberResponse,
   UpdateAccountStatusRequest,
   UpdateAccountStatusResponse,
+  Account,
 } from "@/features/accounts/types";
+
+export interface ApproveAccountRequestParams {
+  accountId: string;
+}
+
+export interface RejectAccountRequestParams {
+  accountId: string;
+  reason?: string;
+}
+
+export interface AccountRequestResponse extends BaseResponse {
+  data: Account;
+}
 
 export const accountsApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -70,6 +85,33 @@ export const accountsApi = api.injectEndpoints({
         "Account",
       ],
     }),
+    getPendingAccountRequests: builder.query<AccountsResponse, AccountsQueryParams>({
+      query: (params: AccountsQueryParams) => ({
+        url: "/accounts/account-requests",
+        method: "GET",
+        params: {
+          page: params.page || 1,
+          limit: params.limit || 20,
+          sort: params.sort || "desc",
+        },
+      }),
+      providesTags: ["Account"],
+    }),
+    approveAccountRequest: builder.mutation<AccountRequestResponse, ApproveAccountRequestParams>({
+      query: ({ accountId }) => ({
+        url: `/accounts/account-requests/${accountId}/approve`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Account"],
+    }),
+    rejectAccountRequest: builder.mutation<AccountRequestResponse, RejectAccountRequestParams>({
+      query: ({ accountId, reason }) => ({
+        url: `/accounts/account-requests/${accountId}/reject`,
+        method: "POST",
+        body: reason ? { reason } : {},
+      }),
+      invalidatesTags: ["Account"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -80,4 +122,7 @@ export const {
   useGetAccountByNumberQuery,
   useUpdateAccountStatusMutation,
   useSetOverdraftLimitMutation,
+  useGetPendingAccountRequestsQuery,
+  useApproveAccountRequestMutation,
+  useRejectAccountRequestMutation,
 } = accountsApi;

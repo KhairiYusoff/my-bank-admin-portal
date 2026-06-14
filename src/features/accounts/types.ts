@@ -18,7 +18,7 @@ export interface Account {
   accountType: string;
   branch: string;
   balance: number;
-  interestRate: number;
+  interestRate?: number;
   currency: string;
   status: string;
   dateOpened: string;
@@ -28,6 +28,14 @@ export interface Account {
   __v: number;
   createdAt?: string;
   updatedAt?: string;
+  // Fixed Deposit fields
+  lockPeriod?: number;
+  maturityDate?: string;
+  linkedAccount?: string;
+  principal?: number;
+  autoRenew?: boolean;
+  // Business field
+  companyRegistrationDoc?: string;
 }
 
 export interface AccountDetail extends Account {

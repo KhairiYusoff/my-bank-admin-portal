@@ -33,7 +33,7 @@ interface SnackbarState {
 interface AirdropFormData {
   accountNumber: string;
   amount: number;
-  memo: string;
+  memo?: string;
 }
 
 const airdropSchema = yup.object().shape({
