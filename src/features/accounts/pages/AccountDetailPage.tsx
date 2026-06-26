@@ -13,6 +13,8 @@ import { useAppSelector } from "@/app/hooks";
 import {
   useGetAccountByNumberQuery,
   useUpdateAccountStatusMutation,
+  useSuspendAccountMutation,
+  useReactivateAccountMutation,
 } from "@/features/accounts/store/accountsApi";
 import type { Account } from "@/features/accounts/types";
 import StatusChip from "@/components/shared/StatusChip";
@@ -43,6 +45,10 @@ const AccountDetailPage: React.FC = () => {
 
   const [updateStatus, { isLoading: isUpdating }] =
     useUpdateAccountStatusMutation();
+  const [suspendAccount, { isLoading: isSuspending }] =
+    useSuspendAccountMutation();
+  const [reactivateAccount, { isLoading: isReactivating }] =
+    useReactivateAccountMutation();
 
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [overdraftModalOpen, setOverdraftModalOpen] = useState(false);
@@ -99,6 +105,44 @@ const AccountDetailPage: React.FC = () => {
       setSnackbar({
         open: true,
         message: "Failed to update account status.",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleSuspend = async () => {
+    if (!account) return;
+    try {
+      await suspendAccount({ accountNumber: account.accountNumber }).unwrap();
+      setSnackbar({
+        open: true,
+        message: "Account suspended.",
+        severity: "success",
+      });
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Failed to suspend account.",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleReactivate = async () => {
+    if (!account) return;
+    try {
+      await reactivateAccount({
+        accountNumber: account.accountNumber,
+      }).unwrap();
+      setSnackbar({
+        open: true,
+        message: "Account reactivated.",
+        severity: "success",
+      });
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Failed to reactivate account.",
         severity: "error",
       });
     }
@@ -174,6 +218,30 @@ const AccountDetailPage: React.FC = () => {
               Manage Status
             </Button>
           )}
+          {currentUserRole === "banker" && (
+            <>
+              {account.status !== "suspended" && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleSuspend}
+                  disabled={isSuspending}
+                >
+                  {isSuspending ? "Suspending..." : "Suspend Account"}
+                </Button>
+              )}
+              {account.status === "suspended" && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleReactivate}
+                  disabled={isReactivating}
+                >
+                  {isReactivating ? "Reactivating..." : "Reactivate Account"}
+                </Button>
+              )}
+            </>
+          )}
         </Box>
       </Box>
 
@@ -227,8 +295,10 @@ const AccountDetailPage: React.FC = () => {
                 value: (
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {formatCurrency(account.overdraftLimit, account.currency)}
-                    {(currentUserRole === "admin" || currentUserRole === "banker") &&
-                      (account.accountType === "current" || account.accountType === "business") && (
+                    {(currentUserRole === "admin" ||
+                      currentUserRole === "banker") &&
+                      (account.accountType === "current" ||
+                        account.accountType === "business") && (
                         <Button
                           variant="outlined"
                           size="small"

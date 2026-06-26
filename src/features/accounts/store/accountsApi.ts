@@ -72,7 +72,11 @@ export const accountsApi = api.injectEndpoints({
       ],
     }),
     setOverdraftLimit: builder.mutation<
-      { success: boolean; message: string; data: { accountNumber: string; overdraftLimit: number } },
+      {
+        success: boolean;
+        message: string;
+        data: { accountNumber: string; overdraftLimit: number };
+      },
       { accountNumber: string; overdraftLimit: number }
     >({
       query: ({ accountNumber, overdraftLimit }) => ({
@@ -85,7 +89,10 @@ export const accountsApi = api.injectEndpoints({
         "Account",
       ],
     }),
-    getPendingAccountRequests: builder.query<AccountsResponse, AccountsQueryParams>({
+    getPendingAccountRequests: builder.query<
+      AccountsResponse,
+      AccountsQueryParams
+    >({
       query: (params: AccountsQueryParams) => ({
         url: "/accounts/account-requests",
         method: "GET",
@@ -97,20 +104,46 @@ export const accountsApi = api.injectEndpoints({
       }),
       providesTags: ["Account"],
     }),
-    approveAccountRequest: builder.mutation<AccountRequestResponse, ApproveAccountRequestParams>({
+    approveAccountRequest: builder.mutation<
+      AccountRequestResponse,
+      ApproveAccountRequestParams
+    >({
       query: ({ accountId }) => ({
         url: `/accounts/account-requests/${accountId}/approve`,
         method: "POST",
       }),
       invalidatesTags: ["Account"],
     }),
-    rejectAccountRequest: builder.mutation<AccountRequestResponse, RejectAccountRequestParams>({
+    rejectAccountRequest: builder.mutation<
+      AccountRequestResponse,
+      RejectAccountRequestParams
+    >({
       query: ({ accountId, reason }) => ({
         url: `/accounts/account-requests/${accountId}/reject`,
         method: "POST",
         body: reason ? { reason } : {},
       }),
       invalidatesTags: ["Account"],
+    }),
+    suspendAccount: builder.mutation<any, { accountNumber: string }>({
+      query: ({ accountNumber }) => ({
+        url: `/accounts/${accountNumber}/suspend`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_result, _error, { accountNumber }) => [
+        { type: "Account", id: accountNumber },
+        "Account",
+      ],
+    }),
+    reactivateAccount: builder.mutation<any, { accountNumber: string }>({
+      query: ({ accountNumber }) => ({
+        url: `/accounts/${accountNumber}/reactivate`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_result, _error, { accountNumber }) => [
+        { type: "Account", id: accountNumber },
+        "Account",
+      ],
     }),
   }),
   overrideExisting: false,
@@ -125,4 +158,6 @@ export const {
   useGetPendingAccountRequestsQuery,
   useApproveAccountRequestMutation,
   useRejectAccountRequestMutation,
+  useSuspendAccountMutation,
+  useReactivateAccountMutation,
 } = accountsApi;
