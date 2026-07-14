@@ -13,6 +13,7 @@ import {
   CircularProgress,
   Alert,
   TablePagination,
+  Chip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
@@ -92,9 +93,10 @@ const StaffPage: React.FC = () => {
               <TableHead>
                 <TableRow>
                   <TableCell width="18%">Name</TableCell>
-                  <TableCell width="22%">Email</TableCell>
+                  <TableCell width="20%">Email</TableCell>
                   <TableCell width="12%">Role</TableCell>
                   <TableCell width="14%">Account Status</TableCell>
+                  <TableCell width="12%">Security Handshake</TableCell>
                   <TableCell width="10%">Created At</TableCell>
                   <TableCell width="8%">Actions</TableCell>
                 </TableRow>
@@ -107,6 +109,14 @@ const StaffPage: React.FC = () => {
                     <TableCell>{member.role}</TableCell>
                     <TableCell>
                       <StatusChip status={member.status} />
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={member.isFirstTime ? "Change Required" : "Completed"}
+                        color={member.isFirstTime ? "warning" : "success"}
+                        size="small"
+                        sx={{ minWidth: "80px", textTransform: "capitalize" }}
+                      />
                     </TableCell>
                     <TableCell>{formatDate(member.createdAt)}</TableCell>
                     <TableCell>
