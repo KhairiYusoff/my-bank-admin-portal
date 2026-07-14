@@ -22,6 +22,8 @@ import {
   tableStyles,
   paperWrapperStyles,
 } from "@/components/shared/TableStyles";
+import { useAppSelector } from "@/app/hooks";
+import { selectCurrentUser } from "@/features/auth/store/authSlice";
 import {
   useGetPendingAccountRequestsQuery,
   useApproveAccountRequestMutation,
@@ -33,6 +35,8 @@ import AccountRequestActions from "./AccountRequestActions";
 type Order = "asc" | "desc";
 
 const AccountRequests: React.FC = () => {
+  const user = useAppSelector(selectCurrentUser);
+  const canPerformAction = user?.role === "banker";
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [order, setOrder] = useState<Order>("desc");
@@ -123,7 +127,7 @@ const AccountRequests: React.FC = () => {
                       Requested At
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  {canPerformAction && <TableCell align="right">Actions</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -171,12 +175,14 @@ const AccountRequests: React.FC = () => {
                       <TableCell>
                         {request.dateOpened ? new Date(request.dateOpened).toLocaleString() : "N/A"}
                       </TableCell>
-                      <TableCell>
-                        <AccountRequestActions
-                          onApprove={() => handleApprove(request._id)}
-                          onReject={(reason) => handleReject(request._id, reason)}
-                        />
-                      </TableCell>
+                      {canPerformAction && (
+                        <TableCell>
+                          <AccountRequestActions
+                            onApprove={() => handleApprove(request._id)}
+                            onReject={(reason) => handleReject(request._id, reason)}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 ) : (

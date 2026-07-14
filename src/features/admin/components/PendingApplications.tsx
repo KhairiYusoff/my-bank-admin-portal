@@ -20,6 +20,8 @@ import {
   tableStyles,
   paperWrapperStyles,
 } from "@/components/shared/TableStyles";
+import { useAppSelector } from "@/app/hooks";
+import { selectCurrentUser } from "@/features/auth/store/authSlice";
 import {
   useGetPendingApplicationsQuery,
   useApproveApplicationMutation,
@@ -32,6 +34,8 @@ import ProfileLinkDialog from "@/features/admin/components/ProfileLinkDialog";
 type Order = "asc" | "desc";
 
 const PendingApplications: React.FC = () => {
+  const user = useAppSelector(selectCurrentUser);
+  const canPerformAction = ["admin", "banker"].includes(user?.role || "");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState<keyof PendingApplication>("createdAt");
@@ -152,7 +156,7 @@ const PendingApplications: React.FC = () => {
                       Submitted At
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell>Actions</TableCell>
+                  {canPerformAction && <TableCell>Actions</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -165,24 +169,26 @@ const PendingApplications: React.FC = () => {
                       <TableCell>
                         {new Date(application.createdAt).toLocaleString()}
                       </TableCell>
-                      <TableCell>
-                        <ApplicationActions
-                          applicationStatus={application.applicationStatus}
-                          isProfileComplete={application.isProfileComplete}
-                          onApprove={() =>
-                            handleApproveApplication(application._id)
-                          }
-                          onVerify={() => handleVerifyCustomer(application._id)}
-                          actionInProgress={
-                            isApproving
-                              ? "approve"
-                              : isVerifying
-                              ? "verify"
-                              : null
-                          }
-                          disabled={isApproving || isVerifying}
-                        />
-                      </TableCell>
+                      {canPerformAction && (
+                        <TableCell>
+                          <ApplicationActions
+                            applicationStatus={application.applicationStatus}
+                            isProfileComplete={application.isProfileComplete}
+                            onApprove={() =>
+                              handleApproveApplication(application._id)
+                            }
+                            onVerify={() => handleVerifyCustomer(application._id)}
+                            actionInProgress={
+                              isApproving
+                                ? "approve"
+                                : isVerifying
+                                ? "verify"
+                                : null
+                            }
+                            disabled={isApproving || isVerifying}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 ) : (
