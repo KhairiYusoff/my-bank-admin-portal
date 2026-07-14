@@ -58,7 +58,7 @@ const navItems: {
     label: "Account Management",
     path: "/accounts",
     icon: <AccountBalanceIcon />,
-    roles: ["admin", "banker", "auditor"],
+    roles: ["admin", "auditor"],
   },
   {
     label: "Approval Hub",
@@ -76,7 +76,7 @@ const navItems: {
     label: "Transaction History",
     path: "/transactions",
     icon: <SwapHorizIcon />,
-    roles: ["admin", "banker", "auditor"],
+    roles: ["admin", "auditor"],
   },
   {
     label: "Airdrop Management",

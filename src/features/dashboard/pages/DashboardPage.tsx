@@ -109,32 +109,34 @@ const DashboardPage: React.FC = () => {
               iconColor="#ed6c02"
               to="/approvals"
             />
-            <KpiCard
-              label="Total Accounts"
-              count={counts?.accounts}
-              sublabel="All account types"
-              icon={<AccountIcon />}
-              iconColor="#2e7d32"
-              to="/accounts"
-            />
             {user?.role !== "banker" && (
-              <KpiCard
-                label="Staff Members"
-                count={counts?.staff}
-                sublabel="Admins, bankers & auditors"
-                icon={<StaffIcon />}
-                iconColor="#ed6c02"
-                to="/staff"
-              />
+              <>
+                <KpiCard
+                  label="Total Accounts"
+                  count={counts?.accounts}
+                  sublabel="All account types"
+                  icon={<AccountIcon />}
+                  iconColor="#2e7d32"
+                  to="/accounts"
+                />
+                <KpiCard
+                  label="Staff Members"
+                  count={counts?.staff}
+                  sublabel="Admins, bankers & auditors"
+                  icon={<StaffIcon />}
+                  iconColor="#ed6c02"
+                  to="/staff"
+                />
+                <KpiCard
+                  label="Transactions Today"
+                  count={counts?.transactionsToday}
+                  sublabel="All statuses"
+                  icon={<TxnIcon />}
+                  iconColor="#7b1fa2"
+                  to="/transactions"
+                />
+              </>
             )}
-            <KpiCard
-              label="Transactions Today"
-              count={counts?.transactionsToday}
-              sublabel="All statuses"
-              icon={<TxnIcon />}
-              iconColor="#7b1fa2"
-              to="/transactions"
-            />
           </Box>
 
           {/* ── Row 2: Financial Snapshot ── */}

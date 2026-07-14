@@ -74,12 +74,10 @@ export const routes: AppRoute[] = [
   createRoute("/audit", <AuditLogPage />, true, ["admin", "auditor"]),
   createRoute("/transactions", <TransactionsList />, true, [
     "admin",
-    "banker",
     "auditor",
   ]),
   createRoute("/accounts", <AccountsList />, true, [
     "admin",
-    "banker",
     "auditor",
   ]),
   createRoute("/accounts/:accountNumber", <AccountDetailPage />, true, [
