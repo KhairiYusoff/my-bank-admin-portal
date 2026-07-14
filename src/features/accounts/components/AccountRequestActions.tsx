@@ -46,7 +46,7 @@ export const AccountRequestActions: React.FC<AccountRequestActionsProps> = ({
   };
 
   return (
-    <Box sx={{ display: 'flex', gap: 1 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1}}>
       <LoadingButton
         size="small"
         variant="contained"
@@ -55,6 +55,7 @@ export const AccountRequestActions: React.FC<AccountRequestActionsProps> = ({
         disabled={disabled}
         onClick={() => setIsApproveConfirmOpen(true)}
         startIcon={<ApproveIcon />}
+        sx={{ width: 100 }}
       >
         Approve
       </LoadingButton>
@@ -67,6 +68,7 @@ export const AccountRequestActions: React.FC<AccountRequestActionsProps> = ({
         disabled={disabled}
         onClick={() => setIsRejectDialogOpen(true)}
         startIcon={<RejectIcon />}
+        sx={{ width: 100 }}
       >
         Reject
       </LoadingButton>

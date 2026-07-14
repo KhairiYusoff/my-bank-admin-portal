@@ -33,7 +33,7 @@ const ApprovalHub: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
           Approval Hub
@@ -62,7 +62,7 @@ const ApprovalHub: React.FC = () => {
       <TabPanel value={value} index={1}>
         <AccountRequests />
       </TabPanel>
-    </Container>
+    </Box>
   );
 };
 

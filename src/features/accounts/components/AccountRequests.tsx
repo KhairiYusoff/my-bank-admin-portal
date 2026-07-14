@@ -171,7 +171,7 @@ const AccountRequests: React.FC = () => {
                       <TableCell>
                         {request.createdAt ? new Date(request.createdAt).toLocaleString() : "N/A"}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         <AccountRequestActions
                           onApprove={() => handleApprove(request._id)}
                           onReject={(reason) => handleReject(request._id, reason)}
