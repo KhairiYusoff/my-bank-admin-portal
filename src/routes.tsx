@@ -92,7 +92,7 @@ export const routes: AppRoute[] = [
     ["admin", "banker", "auditor"],
   ),
   createRoute("/airdrop", <Airdrop />, true, ["admin"]),
-  createRoute("/staff", <StaffPage />, true, ["admin"]),
+  createRoute("/staff", <StaffPage />, true, ["admin", "auditor"]),
   createRoute("/staff/:id", <StaffDetailPage />, true, ["admin"]),
   createRoute("/forbidden", <ForbiddenPage />, false),
   createRoute("*", <NotFoundPage />, false),

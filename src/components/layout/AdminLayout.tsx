@@ -52,7 +52,7 @@ const navItems: {
     label: "Staff Management",
     path: "/staff",
     icon: <PersonAddIcon />,
-    roles: ["admin"],
+    roles: ["admin", "auditor"],
   },
   {
     label: "Account Management",
