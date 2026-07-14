@@ -169,7 +169,7 @@ const AccountRequests: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        {request.createdAt ? new Date(request.createdAt).toLocaleString() : "N/A"}
+                        {request.dateOpened ? new Date(request.dateOpened).toLocaleString() : "N/A"}
                       </TableCell>
                       <TableCell>
                         <AccountRequestActions
