@@ -107,7 +107,7 @@ const DashboardPage: React.FC = () => {
               sublabel="Awaiting review"
               icon={<PendingIcon />}
               iconColor="#ed6c02"
-              to="/pending-applications"
+              to="/approvals"
             />
             <KpiCard
               label="Total Accounts"
