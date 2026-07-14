@@ -27,12 +27,15 @@ import {
 } from "@/components/shared/TableStyles";
 import StatusChip from "@/components/shared/StatusChip";
 import { formatDate } from "@/utils/formatters";
+import { selectCurrentUser } from "@/features/auth/store/authSlice";
+import { useAppSelector } from "@/app/store";
 
 const StaffPage: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
+  const user = useAppSelector(selectCurrentUser);
 
   const {
     data: staffResponse,
@@ -71,13 +74,15 @@ const StaffPage: React.FC = () => {
         <Typography variant="h5" component="h1">
           Staff Management
         </Typography>
-        <Button
-          variant="contained"
-          onClick={handleOpenModal}
-          startIcon={<AddIcon />}
-        >
-          Create Staff
-        </Button>
+        {user?.role === "admin" && (
+          <Button
+            variant="contained"
+            onClick={handleOpenModal}
+            startIcon={<AddIcon />}
+          >
+            Create Staff
+          </Button>
+        )}
       </Box>
 
       {isLoading && <CircularProgress />}
